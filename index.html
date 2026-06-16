@@ -1,3 +1,404 @@
-a = int(input("Enter first number: "))
-b = int(input("Enter second number: "))
-print(f"Sum = {a + b}")
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #4f46e5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .logo svg { width: 24px; height: 24px; fill: #fff; }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 0.35rem;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-family: inherit;
+      color: #111827;
+      background: #fafafa;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #4f46e5;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper input { padding-right: 2.75rem; }
+
+    .toggle-pw {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    .toggle-pw:hover { color: #4f46e5; }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      color: #374151;
+      cursor: pointer;
+    }
+
+    .remember input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: #4f46e5;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #4f46e5;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .forgot-link:hover { text-decoration: underline; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: #4f46e5;
+      color: #fff;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      font-family: inherit;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-primary:hover { background: #4338ca; }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .divider {
+      text-align: center;
+      font-size: 0.8125rem;
+      color: #9ca3af;
+      margin: 1.25rem 0;
+      position: relative;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 42%;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .btn-google {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      background: #fff;
+      color: #374151;
+      font-size: 0.9rem;
+      font-weight: 500;
+      font-family: inherit;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .btn-google:hover { background: #f9fafb; border-color: #d1d5db; }
+
+    .signup-text {
+      text-align: center;
+      font-size: 0.8125rem;
+      color: #6b7280;
+      margin-top: 1.5rem;
+    }
+
+    .signup-text a {
+      color: #4f46e5;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .signup-text a:hover { text-decoration: underline; }
+
+    /* Forgot Password Panel */
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .login-panel.active { display: block; }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: #4f46e5;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .back-btn:hover { text-decoration: underline; }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 0.875rem 1rem;
+      font-size: 0.8125rem;
+      color: #1e40af;
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .success-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 0.875rem;
+      color: #166534;
+      text-align: center;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .success-box .checkmark {
+      font-size: 1.75rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Login Panel -->
+  <div id="loginPanel" class="panel active">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+      </svg>
+    </div>
+    <h1>Welcome back</h1>
+    <p class="subtitle">Sign in to your account to continue</p>
+
+    <div class="form-group">
+      <label for="email">Email address</label>
+      <input type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password"/>
+        <button class="toggle-pw" onclick="togglePassword()" type="button" aria-label="Toggle password visibility">
+          <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <label class="remember">
+        <input type="checkbox" id="remember"/> Remember me
+      </label>
+      <a class="forgot-link" onclick="showForgot()">Forgot password?</a>
+    </div>
+
+    <button class="btn-primary" onclick="handleLogin()">Sign in</button>
+
+    <div class="divider">or</div>
+
+    <button class="btn-google">
+      <svg width="18" height="18" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Continue with Google
+    </button>
+
+    <p class="signup-text">Don't have an account? <a href="#">Sign up</a></p>
+  </div>
+
+  <!-- Forgot Password Panel -->
+  <div id="forgotPanel" class="panel">
+    <button class="back-btn" onclick="showLogin()">
+      &#8592; Back to sign in
+    </button>
+
+    <h1>Reset password</h1>
+    <p class="subtitle" style="margin-bottom:1.25rem;">Enter your email and we'll send you a reset link.</p>
+
+    <div class="info-box">
+      Check your spam folder if you don't receive the email within a few minutes.
+    </div>
+
+    <div id="forgotForm">
+      <div class="form-group">
+        <label for="resetEmail">Email address</label>
+        <input type="email" id="resetEmail" placeholder="you@example.com"/>
+      </div>
+      <button class="btn-primary" onclick="handleReset()" style="margin-top:0.5rem;">Send reset link</button>
+    </div>
+
+    <div class="success-box" id="successBox">
+      <span class="checkmark">✅</span>
+      <strong>Email sent!</strong><br/>
+      We've sent a password reset link to <span id="sentTo"></span>. It expires in 30 minutes.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showForgot() {
+    document.getElementById('loginPanel').classList.remove('active');
+    document.getElementById('forgotPanel').classList.add('active');
+    document.getElementById('forgotForm').style.display = 'block';
+    document.getElementById('successBox').style.display = 'none';
+  }
+
+  function showLogin() {
+    document.getElementById('forgotPanel').classList.remove('active');
+    document.getElementById('loginPanel').classList.add('active');
+  }
+
+  function togglePassword() {
+    const input = document.getElementById('password');
+    const icon = document.getElementById('eyeIcon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+    } else {
+      input.type = 'password';
+      icon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+    }
+  }
+
+  function handleLogin() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    if (!email || !password) {
+      alert('Please enter your email and password.');
+      return;
+    }
+    alert('Login submitted for: ' + email);
+  }
+
+  function handleReset() {
+    const email = document.getElementById('resetEmail').value.trim();
+    if (!email) {
+      alert('Please enter your email address.');
+      return;
+    }
+    document.getElementById('forgotForm').style.display = 'none';
+    document.getElementById('sentTo').textContent = email;
+    document.getElementById('successBox').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
