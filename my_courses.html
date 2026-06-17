@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My courses</title>
+<style>
+  :root {
+    --paper: #faf8f3;
+    --paper-soft: #f1ede2;
+    --ink: #23262b;
+    --ink-soft: #5b5d52;
+    --ink-faint: #93917f;
+    --rule: #d8d2c0;
+    --oose: #44546b;
+    --oose-soft: #e7eaef;
+    --oose-tick: #2f3d50;
+    --r: #3a7263;
+    --r-soft: #e6eee9;
+    --r-tick: #2a5648;
+    --amber: #9a6b1f;
+    --amber-soft: #f5ead2;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+
+  .mono {
+    font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  header.spine {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 14px;
+    margin-bottom: 8px;
+  }
+
+  header.spine .label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 18px 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .sub {
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin: 0 0 2.5rem;
+    max-width: 520px;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 2.75rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .stat strong {
+    display: block;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+
+  @media (max-width: 720px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    padding: 22px 22px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card.oose { border-color: var(--oose); }
+  .card.r-course { border-color: var(--r); }
+
+  .motif {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .card-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .card.oose .card-eyebrow { color: var(--oose); }
+  .card.r-course .card-eyebrow { color: var(--r); }
+
+  .card h2 {
+    font-size: 21px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    padding-right: 50px;
+  }
+
+  .card .full-name {
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin: 0 0 14px;
+  }
+
+  .card .desc {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+  }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--paper-soft);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    transition: width .25s ease;
+  }
+
+  .card.oose .progress-fill { background: var(--oose); }
+  .card.r-course .progress-fill { background: var(--r); }
+
+  .progress-label {
+    font-size: 12px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    color: var(--ink-soft);
+    min-width: 40px;
+    text-align: right;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+
+  .topic-list {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    border-left: 2px solid var(--rule);
+  }
+
+  .topic-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 0 7px 14px;
+    margin-left: -1.5px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .tick {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid var(--rule);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s, border-color .15s;
+  }
+
+  .tick svg {
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    transition: opacity .1s;
+  }
+
+  .topic-item.done .tick svg { opacity: 1; }
+
+  .card.oose .tick.checked { background: var(--oose); border-color: var(--oose); }
+  .card.r-course .tick.checked { background: var(--r); border-color: var(--r); }
+
+  .topic-text {
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .topic-item.done .topic-text {
+    color: var(--ink-faint);
+    text-decoration: line-through;
+    text-decoration-color: var(--rule);
+  }
+
+  .resources {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .resources li {
+    margin-bottom: 6px;
+  }
+
+  .resources a {
+    font-size: 13px;
+    text-decoration: none;
+    color: var(--amber);
+    border-bottom: 1px solid var(--amber-soft);
+    padding-bottom: 1px;
+  }
+
+  .resources a:hover {
+    border-bottom-color: var(--amber);
+  }
+
+  .resources .res-note {
+    color: var(--ink-faint);
+    font-size: 12px;
+  }
+
+  footer.page-footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 3.5rem;
+  }
+
+  footer.page-footer button {
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="spine">
+    <div>
+      <span class="label mono">study tracker</span>
+    </div>
+    <div class="label mono" id="todayLabel"></div>
+  </header>
+
+  <h1>My courses</h1>
+  <p class="sub">Two courses in progress. Check off topics as you study them — progress is saved on this device.</p>
+
+  <div class="stats-row">
+    <div class="stat">Courses<strong>2</strong></div>
+    <div class="stat">Topics total<strong id="totalTopics">0</strong></div>
+    <div class="stat">Topics studied<strong id="totalDone">0</strong></div>
+  </div>
+
+  <div class="cards">
+
+    <div class="card oose" id="card-oose">
+      <svg class="motif" width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <rect x="2" y="2" width="16" height="11" rx="1.5" stroke="#44546b" stroke-width="1.2"/>
+        <rect x="26" y="2" width="16" height="11" rx="1.5" stroke="#44546b" stroke-width="1.2"/>
+        <rect x="14" y="28" width="16" height="11" rx="1.5" stroke="#44546b" stroke-width="1.2"/>
+        <path d="M10 13V20H22V13" stroke="#44546b" stroke-width="1.2" fill="none"/>
+        <path d="M34 13V20H22V13" stroke="#44546b" stroke-width="1.2" fill="none"/>
+        <path d="M22 20V28" stroke="#44546b" stroke-width="1.2" fill="none"/>
+      </svg>
+      <p class="card-eyebrow mono">course 01</p>
+      <h2>OOSE</h2>
+      <p class="full-name">Object-Oriented Software Engineering</p>
+      <p class="desc">How software gets designed and built around objects rather than procedures — classes, relationships, UML diagrams, design patterns, and the engineering practices that turn a design into a maintainable system.</p>
+
+      <div class="progress-row">
+        <div class="progress-track"><div class="progress-fill" id="fill-oose"></div></div>
+        <span class="progress-label mono" id="label-oose">0/8</span>
+      </div>
+
+      <p class="section-label">Topics</p>
+      <ul class="topic-list" id="topics-oose"></ul>
+
+      <p class="section-label">Study resources</p>
+      <ul class="resources">
+        <li><a href="https://www.geeksforgeeks.org/object-oriented-analysis-and-design/" target="_blank" rel="noopener">GeeksforGeeks — object-oriented analysis & design</a></li>
+        <li><a href="https://www.tutorialspoint.com/uml/index.htm" target="_blank" rel="noopener">TutorialsPoint — UML tutorial</a></li>
+        <li><a href="https://refactoring.guru/design-patterns" target="_blank" rel="noopener">Refactoring Guru — design patterns catalog</a></li>
+        <li><span class="res-note">+ add your own course slides or textbook PDF link here</span></li>
+      </ul>
+    </div>
+
+    <div class="card r-course" id="card-r">
+      <svg class="motif" width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <circle cx="8" cy="32" r="2.4" fill="#3a7263"/>
+        <circle cx="16" cy="20" r="2.4" fill="#3a7263"/>
+        <circle cx="24" cy="26" r="2.4" fill="#3a7263"/>
+        <circle cx="32" cy="10" r="2.4" fill="#3a7263"/>
+        <circle cx="38" cy="18" r="2.4" fill="#3a7263"/>
+        <circle cx="12" cy="8" r="2.4" fill="#3a7263"/>
+        <path d="M4 38H40" stroke="#3a7263" stroke-width="1.2"/>
+        <path d="M4 38V4" stroke="#3a7263" stroke-width="1.2"/>
+      </svg>
+      <p class="card-eyebrow mono">course 02</p>
+      <h2>R Programming</h2>
+      <p class="full-name">Statistical computing and data analysis</p>
+      <p class="desc">A language built for data first — vectors and data frames instead of loops, built-in statistics, and plotting that turns a column of numbers into a chart in one line.</p>
+
+      <div class="progress-row">
+        <div class="progress-track"><div class="progress-fill" id="fill-r"></div></div>
+        <span class="progress-label mono" id="label-r">0/8</span>
+      </div>
+
+      <p class="section-label">Topics</p>
+      <ul class="topic-list" id="topics-r"></ul>
+
+      <p class="section-label">Study resources</p>
+      <ul class="resources">
+        <li><a href="https://www.w3schools.com/r/" target="_blank" rel="noopener">W3Schools — R tutorial</a></li>
+        <li><a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html" target="_blank" rel="noopener">CRAN — official introduction to R</a></li>
+        <li><a href="https://r4ds.hadley.nz/" target="_blank" rel="noopener">R for Data Science (free online book)</a></li>
+        <li><span class="res-note">+ add your own course slides or textbook PDF link here</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <footer class="page-footer">
+    Progress is stored only in this browser. <button onclick="resetProgress()">Reset all progress</button>
+  </footer>
+
+</div>
+
+<script>
+const courses = {
+  oose: {
+    storageKey: 'oose_progress_v1',
+    topics: [
+      "Object-oriented concepts: classes, objects, encapsulation",
+      "Inheritance, polymorphism, abstraction",
+      "UML class diagrams",
+      "UML sequence and use case diagrams",
+      "Requirements analysis with use cases",
+      "Design patterns (creational, structural, behavioral)",
+      "Software architecture and modularity",
+      "Testing and maintaining object-oriented systems"
+    ]
+  },
+  r: {
+    storageKey: 'r_progress_v1',
+    topics: [
+      "R syntax, variables, and data types",
+      "Vectors, lists, and factors",
+      "Data frames and importing data",
+      "Control structures and writing functions",
+      "Data cleaning with dplyr",
+      "Plotting with base R and ggplot2",
+      "Descriptive statistics and distributions",
+      "Basic hypothesis testing in R"
+    ]
+  }
+};
+
+function loadProgress(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveProgress(key, state) {
+  try {
+    localStorage.setItem(key, JSON.stringify(state));
+  } catch (e) {}
+}
+
+function tickSVG() {
+  return '<svg viewBox="0 0 10 10" fill="none"><path d="M1 5L4 8L9 2" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
+function renderCourse(courseKey, listElId, fillElId, labelElId) {
+  const course = courses[courseKey];
+  const state = loadProgress(course.storageKey);
+  const listEl = document.getElementById(listElId);
+  listEl.innerHTML = '';
+
+  course.topics.forEach((topic, i) => {
+    const li = document.createElement('li');
+    li.className = 'topic-item' + (state[i] ? ' done' : '');
+    li.innerHTML =
+      '<span class="tick' + (state[i] ? ' checked' : '') + '">' + tickSVG() + '</span>' +
+      '<span class="topic-text">' + topic + '</span>';
+    li.onclick = () => {
+      state[i] = !state[i];
+      saveProgress(course.storageKey, state);
+      renderCourse(courseKey, listElId, fillElId, labelElId);
+      updateTotals();
+    };
+    listEl.appendChild(li);
+  });
+
+  const doneCount = Object.values(state).filter(Boolean).length;
+  const pct = Math.round((doneCount / course.topics.length) * 100);
+  document.getElementById(fillElId).style.width = pct + '%';
+  document.getElementById(labelElId).textContent = doneCount + '/' + course.topics.length;
+}
+
+function updateTotals() {
+  let total = 0;
+  let done = 0;
+  Object.values(courses).forEach(course => {
+    const state = loadProgress(course.storageKey);
+    total += course.topics.length;
+    done += Object.values(state).filter(Boolean).length;
+  });
+  document.getElementById('totalTopics').textContent = total;
+  document.getElementById('totalDone').textContent = done;
+}
+
+function resetProgress() {
+  Object.values(courses).forEach(course => localStorage.removeItem(course.storageKey));
+  renderCourse('oose', 'topics-oose', 'fill-oose', 'label-oose');
+  renderCourse('r', 'topics-r', 'fill-r', 'label-r');
+  updateTotals();
+}
+
+renderCourse('oose', 'topics-oose', 'fill-oose', 'label-oose');
+renderCourse('r', 'topics-r', 'fill-r', 'label-r');
+updateTotals();
+
+document.getElementById('todayLabel').textContent = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+</script>
+</body>
+</html>
