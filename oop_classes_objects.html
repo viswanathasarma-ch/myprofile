@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classes and objects — an introduction</title>
+<style>
+  :root {
+    --paper: #faf8f3;
+    --paper-soft: #f1ede2;
+    --ink: #23262b;
+    --ink-soft: #5b5d52;
+    --ink-faint: #93917f;
+    --rule: #d8d2c0;
+    --class: #2f5fa3;
+    --class-soft: #e7eef9;
+    --class-border: #b9cde8;
+    --object: #b3651f;
+    --object-soft: #fbecda;
+    --object-border: #ecc790;
+    --code-bg: #1f2430;
+    --code-text: #e6e2d3;
+    --code-comment: #8a917d;
+    --code-string: #c9a25c;
+    --code-key: #7fa8d9;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+  }
+
+  .mono {
+    font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+
+  .page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  header.top {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 14px;
+    margin-bottom: 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  header.top .label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  h1 {
+    font-size: 27px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+
+  p.sub {
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin: 0 0 2.5rem;
+    max-width: 560px;
+  }
+
+  h2.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+
+  p.section-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0 0 1.25rem;
+  }
+
+  section { margin-bottom: 3rem; }
+
+  /* ---------- legend ---------- */
+  .legend {
+    display: flex;
+    gap: 22px;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .swatch {
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .swatch.class { background: var(--class); }
+  .swatch.object { background: var(--object); }
+
+  /* ---------- analogy intro card ---------- */
+  .analogy-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .analogy-card { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    border-radius: var(--radius);
+    padding: 18px 18px 16px;
+    border: 1.5px solid var(--rule);
+  }
+
+  .panel.class-panel {
+    border-color: var(--class-border);
+    background: var(--class-soft);
+  }
+
+  .panel.object-panel {
+    border-color: var(--object-border);
+    background: var(--object-soft);
+  }
+
+  .panel-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .class-panel .panel-eyebrow { color: var(--class); }
+  .object-panel .panel-eyebrow { color: var(--object); }
+
+  .panel h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+
+  .panel p {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  /* ---------- object instances row ---------- */
+  .instances-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 1.5rem 0 2rem;
+  }
+
+  .instance-chip {
+    flex: 1;
+    min-width: 150px;
+    background: var(--object-soft);
+    border: 1.5px solid var(--object-border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+
+  .instance-chip .chip-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--object);
+    margin: 0 0 6px;
+  }
+
+  .instance-chip .chip-attr {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: 0;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  /* ---------- code block ---------- */
+  .code-block {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0 0 1.25rem;
+  }
+
+  .code-block .c { color: var(--code-comment); }
+  .code-block .s { color: var(--code-string); }
+  .code-block .k { color: var(--code-key); }
+
+  .run-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -8px;
+    margin-bottom: 1.5rem;
+  }
+
+  button.run-btn {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 7px;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  button.run-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .output-block {
+    background: var(--paper-soft);
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 2rem;
+    white-space: pre-wrap;
+    display: none;
+  }
+
+  .output-block.show { display: block; }
+
+  .output-block .prompt {
+    color: var(--ink-faint);
+  }
+
+  /* ---------- key idea callout ---------- */
+  .callout {
+    background: var(--paper-soft);
+    border-left: 3px solid var(--ink);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 18px;
+    margin: 0 0 2.5rem;
+    font-size: 14px;
+  }
+
+  .callout strong { font-weight: 600; }
+
+  /* ---------- recap checklist ---------- */
+  .recap-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 2px solid var(--rule);
+  }
+
+  .recap-item {
+    padding: 8px 0 8px 14px;
+    margin-left: -1.5px;
+    font-size: 14px;
+    position: relative;
+  }
+
+  .recap-item::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 14px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+
+  .recap-item strong { font-weight: 600; }
+
+  footer.page-footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 3rem;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="top">
+    <span class="label mono">object-oriented programming</span>
+    <span class="label mono">python</span>
+  </header>
+
+  <h1>Classes and objects</h1>
+  <p class="sub">The two ideas everything else in object-oriented programming is built on: a blueprint, and the real things made from it.</p>
+
+  <div class="legend">
+    <div class="legend-item"><span class="swatch class"></span>class — the blueprint, defined once</div>
+    <div class="legend-item"><span class="swatch object"></span>object — a real thing made from the blueprint</div>
+  </div>
+
+  <section id="car-section">
+    <h2 class="section-title">Example 1 — a car blueprint</h2>
+    <p class="section-sub">A car manufacturer doesn't build a car for every customer from scratch. It designs one blueprint, then stamps out many actual cars from it.</p>
+
+    <div class="analogy-card">
+      <div class="panel class-panel">
+        <p class="panel-eyebrow">the class</p>
+        <h3>Car blueprint</h3>
+        <p>Defines that every car will have a brand, a color, and a speed — and that every car can accelerate. The blueprint itself cannot drive anywhere; it's just the design.</p>
+      </div>
+      <div class="panel object-panel">
+        <p class="panel-eyebrow">the objects</p>
+        <h3>Actual cars</h3>
+        <p>Each car built from the blueprint has its own brand, its own color, and its own current speed. Changing one car's speed never affects any other car.</p>
+      </div>
+    </div>
+
+    <div class="instances-row">
+      <div class="instance-chip">
+        <p class="chip-name">car1</p>
+        <p class="chip-attr">brand = "Toyota"</p>
+        <p class="chip-attr">color = "Red"</p>
+        <p class="chip-attr">speed = 0</p>
+      </div>
+      <div class="instance-chip">
+        <p class="chip-name">car2</p>
+        <p class="chip-attr">brand = "Honda"</p>
+        <p class="chip-attr">color = "Blue"</p>
+        <p class="chip-attr">speed = 0</p>
+      </div>
+    </div>
+
+    <div class="code-block" id="code-car"><span class="k">class</span> Car:
+    <span class="c"># this runs once, when a new Car object is created</span>
+    <span class="k">def</span> __init__(self, brand, color):
+        self.brand = brand
+        self.color = color
+        self.speed = 0
+
+    <span class="k">def</span> accelerate(self, amount):
+        self.speed = self.speed + amount
+
+<span class="c"># two separate objects, made from the same class</span>
+car1 = Car(<span class="s">"Toyota"</span>, <span class="s">"Red"</span>)
+car2 = Car(<span class="s">"Honda"</span>, <span class="s">"Blue"</span>)
+
+car1.accelerate(40)
+
+print(car1.brand, car1.color, car1.speed)
+print(car2.brand, car2.color, car2.speed)</div>
+
+    <div class="run-row">
+      <button class="run-btn" onclick="runCar()">Run this code →</button>
+    </div>
+    <div class="output-block" id="output-car"></div>
+
+    <div class="callout">
+      <strong>Notice:</strong> car1 sped up, but car2 stayed at 0. Each object keeps its own copy of brand, color, and speed — the class only defines what those attributes are called and how accelerate works, not their actual values.
+    </div>
+  </section>
+
+  <section id="student-section">
+    <h2 class="section-title">Example 2 — a student record</h2>
+    <p class="section-sub">A school doesn't write separate code for every student. It defines one Student class, then creates one object per real student.</p>
+
+    <div class="analogy-card">
+      <div class="panel class-panel">
+        <p class="panel-eyebrow">the class</p>
+        <h3>Student blueprint</h3>
+        <p>Defines that every student has a name and a list of grades, and that every student can have a grade added and an average calculated.</p>
+      </div>
+      <div class="panel object-panel">
+        <p class="panel-eyebrow">the objects</p>
+        <h3>Actual students</h3>
+        <p>Asha and Ben are both Student objects. Asha's grades and Ben's grades live separately, even though they were built from the exact same class.</p>
+      </div>
+    </div>
+
+    <div class="instances-row">
+      <div class="instance-chip">
+        <p class="chip-name">asha</p>
+        <p class="chip-attr">name = "Asha"</p>
+        <p class="chip-attr">grades = []</p>
+      </div>
+      <div class="instance-chip">
+        <p class="chip-name">ben</p>
+        <p class="chip-attr">name = "Ben"</p>
+        <p class="chip-attr">grades = []</p>
+      </div>
+    </div>
+
+    <div class="code-block" id="code-student"><span class="k">class</span> Student:
+    <span class="k">def</span> __init__(self, name):
+        self.name = name
+        self.grades = []
+
+    <span class="k">def</span> add_grade(self, grade):
+        self.grades.append(grade)
+
+    <span class="k">def</span> average(self):
+        <span class="k">if</span> len(self.grades) == 0:
+            <span class="k">return</span> 0
+        <span class="k">return</span> sum(self.grades) / len(self.grades)
+
+<span class="c"># two separate student objects</span>
+asha = Student(<span class="s">"Asha"</span>)
+ben = Student(<span class="s">"Ben"</span>)
+
+asha.add_grade(90)
+asha.add_grade(85)
+ben.add_grade(70)
+
+print(asha.name, <span class="s">"average:"</span>, asha.average())
+print(ben.name, <span class="s">"average:"</span>, ben.average())</div>
+
+    <div class="run-row">
+      <button class="run-btn" onclick="runStudent()">Run this code →</button>
+    </div>
+    <div class="output-block" id="output-student"></div>
+
+    <div class="callout">
+      <strong>Notice:</strong> calling add_grade on asha never changed ben's grades. The method add_grade is shared from the class, but the grades list it operates on belongs to whichever object called it.
+    </div>
+  </section>
+
+  <section id="recap">
+    <h2 class="section-title">Recap</h2>
+    <ul class="recap-list">
+      <li class="recap-item"><strong>A class</strong> is a blueprint. It is written once and describes what attributes and methods every object made from it will have.</li>
+      <li class="recap-item"><strong>An object</strong> is one real instance made from a class. Creating an object is sometimes called instantiating the class.</li>
+      <li class="recap-item"><strong>Attributes</strong> are the data each object stores, like brand, color, or grades. Each object has its own separate values.</li>
+      <li class="recap-item"><strong>Methods</strong> are the actions an object can perform, like accelerate or add_grade. The code is shared, but it always acts on the one object that called it.</li>
+      <li class="recap-item"><strong>self</strong> inside a class refers to "whichever object is currently running this method" — it's how a shared method finds the correct object's own data.</li>
+    </ul>
+  </section>
+
+  <footer class="page-footer">Standalone reference page · works fully offline, no internet connection required</footer>
+
+</div>
+
+<script>
+function runCar() {
+  const out = document.getElementById('output-car');
+  out.classList.add('show');
+  out.innerHTML =
+    '<span class="prompt">&gt;&gt;&gt; </span>Toyota Red 40\n' +
+    '<span class="prompt">&gt;&gt;&gt; </span>Honda Blue 0';
+}
+
+function runStudent() {
+  const out = document.getElementById('output-student');
+  out.classList.add('show');
+  out.innerHTML =
+    '<span class="prompt">&gt;&gt;&gt; </span>Asha average: 87.5\n' +
+    '<span class="prompt">&gt;&gt;&gt; </span>Ben average: 70.0';
+}
+</script>
+</body>
+</html>
