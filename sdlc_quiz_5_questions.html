@@ -1,0 +1,138 @@
+<h2 class="sr-only">A five question multiple choice quiz on the Software Development Life Cycle, with instant feedback and a final score.</h2>
+<style>
+.q-wrap { font-family: var(--font-sans); }
+.q-progress { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+.q-card { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.25rem; }
+.q-text { font-size: 15px; font-weight: 500; margin: 0 0 14px; }
+.q-opt { display: block; width: 100%; text-align: left; padding: 10px 14px; margin-bottom: 8px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); font-size: 14px; cursor: pointer; }
+.q-opt:hover:not(:disabled) { border-color: var(--color-border-secondary); }
+.q-opt.correct { border-color: var(--color-border-success); background: var(--color-background-success); color: var(--color-text-success); }
+.q-opt.wrong { border-color: var(--color-border-danger); background: var(--color-background-danger); color: var(--color-text-danger); }
+.q-opt:disabled { cursor: default; }
+.q-explain { font-size: 13px; line-height: 1.6; color: var(--color-text-secondary); margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--color-border-tertiary); }
+.q-nav { display: flex; justify-content: flex-end; margin-top: 1rem; }
+.q-score { text-align: center; padding: 2rem 1rem; }
+.q-score-num { font-size: 32px; font-weight: 500; margin: 8px 0; }
+</style>
+<div class="q-wrap">
+  <div class="q-progress" id="progress"></div>
+  <div class="q-card" id="card"></div>
+  <div class="q-nav" id="nav"></div>
+</div>
+<script>
+const quiz = [
+  {
+    q: "In a college canteen pre-order app project, the team interviews students and the canteen owner to write down what the app must do before any design starts. Which SDLC phase is this?",
+    options: ["Testing", "Planning and requirement analysis", "Deployment", "Maintenance"],
+    correct: 1,
+    explain: "Gathering and documenting what stakeholders need, before any design or code, is the planning and requirement analysis phase. It produces the requirements document everything else builds on."
+  },
+  {
+    q: "Which of these is NOT one of the four angles typically checked during a feasibility study?",
+    options: ["Technical feasibility", "Economic feasibility", "Aesthetic feasibility", "Operational feasibility"],
+    correct: 2,
+    explain: "The four standard angles are technical, economic, legal, and operational feasibility. Aesthetic feasibility (visual look and feel) is not one of the standard checks at this stage."
+  },
+  {
+    q: "A team decides on the database schema, screen layouts, and technology stack for the canteen app, but no application code has been written yet. Which phase are they in?",
+    options: ["Implementation", "System design", "Feasibility study", "Testing"],
+    correct: 1,
+    explain: "Deciding the blueprint, structure, and technology choices without writing the actual program is system design. Implementation comes next, once this blueprint exists."
+  },
+  {
+    q: "Why do teams typically release new software to a small pilot group before rolling it out to everyone?",
+    options: [
+      "It's required by law in most countries",
+      "To let a small group surface problems before everyone depends on the software",
+      "Pilot users pay extra to test early",
+      "It skips the need for testing entirely"
+    ],
+    correct: 1,
+    explain: "A staged or pilot deployment limits the damage if something is broken, since only a small group is affected, and gives the team a chance to fix issues before a full rollout."
+  },
+  {
+    q: "Students start asking for a one-tap reorder feature after the canteen app has already launched. What does this trigger, and why?",
+    options: [
+      "Nothing, since the SDLC ends at deployment",
+      "Immediate deployment of the new feature with no further steps",
+      "A new, smaller cycle that loops back into planning and design",
+      "A rollback to the previous version of the app"
+    ],
+    correct: 2,
+    explain: "New feature requests discovered during maintenance typically loop back into a fresh, smaller planning and design cycle. This is why maintenance feeds back into the start of the SDLC rather than ending it."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+function renderProgress() {
+  document.getElementById('progress').textContent = 'Question ' + (current + 1) + ' of ' + quiz.length + ' · Score: ' + score;
+}
+
+function renderQuestion() {
+  answered = false;
+  const item = quiz[current];
+  renderProgress();
+  const card = document.getElementById('card');
+  card.innerHTML = '<p class="q-text">' + item.q + '</p>' +
+    item.options.map((opt, i) =>
+      '<button class="q-opt" data-i="' + i + '" onclick="selectAnswer(' + i + ')">' + opt + '</button>'
+    ).join('') +
+    '<div class="q-explain" id="explain" style="display:none"></div>';
+  document.getElementById('nav').innerHTML = '';
+}
+
+function selectAnswer(i) {
+  if (answered) return;
+  answered = true;
+  const item = quiz[current];
+  const buttons = document.querySelectorAll('.q-opt');
+  buttons.forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === item.correct) b.classList.add('correct');
+    else if (idx === i && i !== item.correct) b.classList.add('wrong');
+  });
+  if (i === item.correct) score++;
+  renderProgress();
+  const explain = document.getElementById('explain');
+  explain.style.display = 'block';
+  explain.textContent = item.explain;
+  const nav = document.getElementById('nav');
+  if (current < quiz.length - 1) {
+    nav.innerHTML = '<button onclick="nextQuestion()">Next question<i class="ti ti-arrow-right" aria-hidden="true" style="vertical-align:-2px;margin-left:4px"></i></button>';
+  } else {
+    nav.innerHTML = '<button onclick="showScore()">See final score<i class="ti ti-arrow-right" aria-hidden="true" style="vertical-align:-2px;margin-left:4px"></i></button>';
+  }
+}
+
+function nextQuestion() {
+  current++;
+  renderQuestion();
+}
+
+function showScore() {
+  document.getElementById('progress').textContent = '';
+  document.getElementById('nav').innerHTML = '';
+  const pct = Math.round((score / quiz.length) * 100);
+  let msg = "Solid grasp of the fundamentals.";
+  if (pct === 100) msg = "Perfect score, the whole cycle is clear to you.";
+  else if (pct < 60) msg = "Worth a re-read of the phase explanations.";
+  document.getElementById('card').innerHTML =
+    '<div class="q-score">' +
+    '<p style="font-size:14px;color:var(--color-text-secondary);margin:0">You scored</p>' +
+    '<p class="q-score-num">' + score + ' / ' + quiz.length + '</p>' +
+    '<p style="font-size:14px;color:var(--color-text-secondary);margin:0 0 16px">' + msg + '</p>' +
+    '<button onclick="restartQuiz()"><i class="ti ti-refresh" aria-hidden="true" style="vertical-align:-2px;margin-right:4px"></i>Retake quiz</button>' +
+    '</div>';
+}
+
+function restartQuiz() {
+  current = 0;
+  score = 0;
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
