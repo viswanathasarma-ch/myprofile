@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Development Life Cycle — interactive guide</title>
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --card-bg: #ffffff;
+    --card-bg-soft: #f1efe8;
+    --text-primary: #1f1e1c;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --border: #ddd9cf;
+    --accent: #185fa5;
+    --accent-bg: #e6f1fb;
+    --success: #3b6d11;
+    --success-bg: #eaf3de;
+    --success-border: #97c459;
+    --danger: #a32d2d;
+    --danger-bg: #fcebeb;
+    --danger-border: #f09595;
+    --purple: #3c3489;
+    --purple-bg: #eeedfe;
+    --purple-border: #afa9ec;
+    --teal: #085041;
+    --teal-bg: #e1f5ee;
+    --teal-border: #5dcaa5;
+    --coral: #712b13;
+    --coral-bg: #faece7;
+    --coral-border: #f0997b;
+    --amber: #633806;
+    --amber-bg: #faeeda;
+    --amber-border: #efa927;
+    --gray-bg: #f1efe8;
+    --gray-border: #b4b2a9;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1b19;
+      --card-bg: #262521;
+      --card-bg-soft: #2c2b27;
+      --text-primary: #f1efe8;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --border: #3a3935;
+      --accent: #85b7eb;
+      --accent-bg: #0c447c;
+      --success: #c0dd97;
+      --success-bg: #27500a;
+      --success-border: #639922;
+      --danger: #f7c1c1;
+      --danger-bg: #791f1f;
+      --danger-border: #e24b4a;
+      --purple: #cecbf6;
+      --purple-bg: #3c3489;
+      --purple-border: #7f77dd;
+      --teal: #9fe1cb;
+      --teal-bg: #085041;
+      --teal-border: #1d9e75;
+      --coral: #f5c4b3;
+      --coral-bg: #712b13;
+      --coral-border: #d85a30;
+      --amber: #fac775;
+      --amber-bg: #633806;
+      --amber-border: #ba7517;
+      --gray-bg: #444441;
+      --gray-border: #5f5e5a;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 5rem;
+  }
+
+  header.intro {
+    margin-bottom: 2.5rem;
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+
+  .intro p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 640px;
+  }
+
+  h2.section-title {
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  p.section-sub {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 1.25rem;
+  }
+
+  section.block {
+    margin-bottom: 3rem;
+  }
+
+  /* ---------- Stepper ---------- */
+  .sdlc-dots {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .sdlc-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gray-border);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background .2s, transform .2s;
+  }
+
+  .sdlc-dot.active {
+    background: var(--accent);
+    transform: scale(1.3);
+  }
+
+  .sdlc-card {
+    background: var(--card-bg-soft);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.25rem 1rem;
+    min-height: 260px;
+  }
+
+  .sdlc-tag {
+    display: inline-block;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .sdlc-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  .sdlc-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 14px;
+  }
+
+  .sdlc-block {
+    margin-bottom: 12px;
+  }
+
+  .sdlc-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0 0 4px;
+    font-weight: 500;
+  }
+
+  .sdlc-body {
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .sdlc-example {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .sdlc-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    gap: 10px;
+  }
+
+  .sdlc-nav button {
+    flex: 1;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 9px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+
+  button:hover:not(:disabled) {
+    border-color: var(--text-tertiary);
+  }
+
+  .icon-r::after { content: " →"; }
+  .icon-l::before { content: "← "; }
+
+  /* ---------- Quiz ---------- */
+  .q-progress {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    min-height: 16px;
+  }
+
+  .q-card {
+    background: var(--card-bg-soft);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+  }
+
+  .q-text {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 14px;
+  }
+
+  .q-opt {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .q-opt:hover:not(:disabled) {
+    border-color: var(--text-tertiary);
+  }
+
+  .q-opt.correct {
+    border-color: var(--success-border);
+    background: var(--success-bg);
+    color: var(--success);
+  }
+
+  .q-opt.wrong {
+    border-color: var(--danger-border);
+    background: var(--danger-bg);
+    color: var(--danger);
+  }
+
+  .q-opt:disabled {
+    cursor: default;
+  }
+
+  .q-explain {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .q-nav {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+
+  .q-score {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .q-score-num {
+    font-size: 34px;
+    font-weight: 700;
+    margin: 8px 0;
+  }
+
+  footer.page-footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 3rem;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="intro">
+    <h1>The software development life cycle</h1>
+    <p>Walk through all seven SDLC phases using one running example, a college canteen pre-order app, then test your understanding with a short quiz below.</p>
+  </header>
+
+  <section class="block">
+    <h2 class="section-title">Phase walkthrough</h2>
+    <p class="section-sub">Click through each phase. Every phase shows what happens in general, then how it played out for the canteen app.</p>
+    <div class="sdlc-dots" id="dots"></div>
+    <div class="sdlc-card" id="card"></div>
+    <div class="sdlc-nav">
+      <button class="icon-l" onclick="goPhase(-1)">Previous</button>
+      <button class="icon-r" id="nextBtn" onclick="goPhase(1)">Next</button>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="section-title">Quick quiz</h2>
+    <p class="section-sub">Five questions, all tied to the canteen app example. Pick an answer to see instant feedback.</p>
+    <div class="q-progress" id="progress"></div>
+    <div class="q-card" id="qcard"></div>
+    <div class="q-nav" id="qnav"></div>
+  </section>
+
+  <footer class="page-footer">Standalone reference page · works fully offline, no internet connection required</footer>
+
+</div>
+
+<script>
+/* ============== Phase walkthrough ============== */
+const phases = [
+  {
+    tag: "the problem", colorVar: "gray",
+    title: "Why we need an SDLC at all",
+    sub: "Before phase 1, meet the project",
+    what: "Students at a college canteen lose 15 to 20 minutes standing in a lunch queue every day, and the canteen owner often over cooks or under cooks food because nobody knows demand in advance. The college wants an app where students pre order and pre pay, and the canteen sees orders coming in live.",
+    example: "This single problem will travel through every phase below: planning it, designing it, building it, testing it, launching it, and maintaining it. Notice how each phase hands off a concrete output to the next one."
+  },
+  {
+    tag: "phase 1", colorVar: "purple",
+    title: "Planning and requirement analysis",
+    sub: "Figure out what to build and why",
+    what: "The team talks to everyone affected, students, canteen staff, and the college administration, to pin down what the app must do, what it must avoid, the budget, the timeline, and the risks. The output is a requirements document everyone agrees on before any design or code happens.",
+    example: "For the canteen app, the team interviews 30 students and the canteen owner. They learn students want to pre order between 10 and 11 AM and pick up by name, while the owner needs a live dashboard of incoming orders and wants payment collected upfront to cut food waste."
+  },
+  {
+    tag: "phase 2", colorVar: "purple",
+    title: "Feasibility study",
+    sub: "Check if the idea is actually viable",
+    what: "Before committing resources, the team checks four angles: technical (do we have the skills and tools), economic (does the cost make sense against the benefit), legal (any compliance issues, like handling student payments), and operational (will staff and students actually use it day to day).",
+    example: "For the canteen app, the team confirms a small team can build it in eight weeks using a basic mobile app plus a simple payment gateway, the cost is well within the college's budget, and the canteen owner agrees to use a tablet at the counter to view orders."
+  },
+  {
+    tag: "phase 3", colorVar: "teal",
+    title: "System design",
+    sub: "Turn requirements into a blueprint",
+    what: "Architects and senior developers decide how the system will be structured: the database schema, the screens, the technology stack, and how components talk to each other. This phase produces design documents and diagrams that programmers will follow, without writing the actual application code yet.",
+    example: "For the canteen app, the team designs a database with tables for students, menu items, and orders, sketches the order screen and the canteen dashboard, and decides to build it as a simple mobile app with a cloud backend so it can scale during exam season rush."
+  },
+  {
+    tag: "phase 4", colorVar: "teal",
+    title: "Implementation (coding)",
+    sub: "Developers write the actual program",
+    what: "Programmers translate the design documents into working code, usually splitting the system into modules that different developers or teams build in parallel, following agreed coding standards so the pieces fit together cleanly later.",
+    example: "For the canteen app, one developer builds the student ordering screen, another builds the payment integration, and a third builds the canteen owner's live order dashboard, all working from the same database schema decided in the design phase."
+  },
+  {
+    tag: "phase 5", colorVar: "coral",
+    title: "Testing",
+    sub: "Find and fix what's broken before users do",
+    what: "Testers and developers verify the software actually does what the requirements said, hunting for bugs through several layers: testing individual modules, testing how modules work together, and testing the complete system against real use cases.",
+    example: "For the canteen app, testers place test orders to check the payment really deducts correctly, try ordering with a poor network connection, and check that the canteen dashboard updates instantly when ten students order at the same time during a simulated lunch rush."
+  },
+  {
+    tag: "phase 6", colorVar: "coral",
+    title: "Deployment",
+    sub: "Release the software to real users",
+    what: "The tested software is released to actual users, often gradually rather than all at once, so problems surface with a small group before everyone depends on it. A rollback plan stays ready in case something goes wrong after release.",
+    example: "For the canteen app, the college first releases it to one hostel block for a week as a pilot, watches for crashes or payment failures, then rolls it out to the entire campus once the pilot week passes without major issues."
+  },
+  {
+    tag: "phase 7", colorVar: "amber",
+    title: "Maintenance",
+    sub: "Keep it working, then keep it improving",
+    what: "After launch, the team fixes bugs that slipped through, patches security issues, adapts the software to changes like a new payment provider, and adds features users ask for. This phase runs for the entire useful life of the software and often surfaces new requirements, looping back into planning.",
+    example: "For the canteen app, students start requesting a feature to reorder their favourite meal in one tap, and the canteen wants a way to mark items sold out during the rush. Both requests loop back into a fresh, smaller planning and design cycle."
+  }
+];
+
+let pIdx = 0;
+const dotsEl = document.getElementById('dots');
+const cardEl = document.getElementById('card');
+const nextBtn = document.getElementById('nextBtn');
+
+phases.forEach((_, i) => {
+  const b = document.createElement('button');
+  b.className = 'sdlc-dot' + (i === 0 ? ' active' : '');
+  b.style.padding = '0';
+  b.setAttribute('aria-label', 'Go to step ' + (i + 1));
+  b.onclick = () => { pIdx = i; renderPhase(); };
+  dotsEl.appendChild(b);
+});
+
+function tagStyle(colorVar) {
+  const map = {
+    gray:   { bg: 'var(--gray-bg)',   fg: 'var(--text-secondary)', border: 'var(--gray-border)' },
+    purple: { bg: 'var(--purple-bg)', fg: 'var(--purple)',         border: 'var(--purple-border)' },
+    teal:   { bg: 'var(--teal-bg)',   fg: 'var(--teal)',           border: 'var(--teal-border)' },
+    coral:  { bg: 'var(--coral-bg)',  fg: 'var(--coral)',          border: 'var(--coral-border)' },
+    amber:  { bg: 'var(--amber-bg)',  fg: 'var(--amber)',          border: 'var(--amber-border)' }
+  };
+  const c = map[colorVar] || map.gray;
+  return 'background:' + c.bg + ';color:' + c.fg + ';border:1px solid ' + c.border + ';';
+}
+
+function renderPhase() {
+  const p = phases[pIdx];
+  cardEl.innerHTML =
+    '<span class="sdlc-tag" style="' + tagStyle(p.colorVar) + '">' + p.tag + '</span>' +
+    '<p class="sdlc-title">' + p.title + '</p>' +
+    '<p class="sdlc-sub">' + p.sub + '</p>' +
+    '<div class="sdlc-block">' +
+      '<p class="sdlc-label">What happens here</p>' +
+      '<p class="sdlc-body">' + p.what + '</p>' +
+    '</div>' +
+    '<div class="sdlc-block">' +
+      '<p class="sdlc-label">Canteen app example</p>' +
+      '<div class="sdlc-example">' + p.example + '</div>' +
+    '</div>';
+  document.querySelectorAll('.sdlc-dot').forEach((d, i) => d.classList.toggle('active', i === pIdx));
+  nextBtn.textContent = pIdx === phases.length - 1 ? '↻ Back to start' : 'Next';
+  nextBtn.classList.toggle('icon-r', pIdx !== phases.length - 1);
+}
+
+function goPhase(dir) {
+  pIdx = (pIdx + dir + phases.length) % phases.length;
+  renderPhase();
+}
+
+renderPhase();
+
+/* ============== Quiz ============== */
+const quiz = [
+  {
+    q: "In a college canteen pre-order app project, the team interviews students and the canteen owner to write down what the app must do before any design starts. Which SDLC phase is this?",
+    options: ["Testing", "Planning and requirement analysis", "Deployment", "Maintenance"],
+    correct: 1,
+    explain: "Gathering and documenting what stakeholders need, before any design or code, is the planning and requirement analysis phase. It produces the requirements document everything else builds on."
+  },
+  {
+    q: "Which of these is NOT one of the four angles typically checked during a feasibility study?",
+    options: ["Technical feasibility", "Economic feasibility", "Aesthetic feasibility", "Operational feasibility"],
+    correct: 2,
+    explain: "The four standard angles are technical, economic, legal, and operational feasibility. Aesthetic feasibility (visual look and feel) is not one of the standard checks at this stage."
+  },
+  {
+    q: "A team decides on the database schema, screen layouts, and technology stack for the canteen app, but no application code has been written yet. Which phase are they in?",
+    options: ["Implementation", "System design", "Feasibility study", "Testing"],
+    correct: 1,
+    explain: "Deciding the blueprint, structure, and technology choices without writing the actual program is system design. Implementation comes next, once this blueprint exists."
+  },
+  {
+    q: "Why do teams typically release new software to a small pilot group before rolling it out to everyone?",
+    options: [
+      "It's required by law in most countries",
+      "To let a small group surface problems before everyone depends on the software",
+      "Pilot users pay extra to test early",
+      "It skips the need for testing entirely"
+    ],
+    correct: 1,
+    explain: "A staged or pilot deployment limits the damage if something is broken, since only a small group is affected, and gives the team a chance to fix issues before a full rollout."
+  },
+  {
+    q: "Students start asking for a one-tap reorder feature after the canteen app has already launched. What does this trigger, and why?",
+    options: [
+      "Nothing, since the SDLC ends at deployment",
+      "Immediate deployment of the new feature with no further steps",
+      "A new, smaller cycle that loops back into planning and design",
+      "A rollback to the previous version of the app"
+    ],
+    correct: 2,
+    explain: "New feature requests discovered during maintenance typically loop back into a fresh, smaller planning and design cycle. This is why maintenance feeds back into the start of the SDLC rather than ending it."
+  }
+];
+
+let qCurrent = 0;
+let qScore = 0;
+let qAnswered = false;
+
+function renderQProgress() {
+  document.getElementById('progress').textContent = 'Question ' + (qCurrent + 1) + ' of ' + quiz.length + ' · Score: ' + qScore;
+}
+
+function renderQuestion() {
+  qAnswered = false;
+  const item = quiz[qCurrent];
+  renderQProgress();
+  const card = document.getElementById('qcard');
+  card.innerHTML = '<p class="q-text">' + item.q + '</p>' +
+    item.options.map((opt, i) =>
+      '<button class="q-opt" data-i="' + i + '" onclick="selectAnswer(' + i + ')">' + opt + '</button>'
+    ).join('') +
+    '<div class="q-explain" id="explain" style="display:none"></div>';
+  document.getElementById('qnav').innerHTML = '';
+}
+
+function selectAnswer(i) {
+  if (qAnswered) return;
+  qAnswered = true;
+  const item = quiz[qCurrent];
+  const buttons = document.querySelectorAll('.q-opt');
+  buttons.forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === item.correct) b.classList.add('correct');
+    else if (idx === i && i !== item.correct) b.classList.add('wrong');
+  });
+  if (i === item.correct) qScore++;
+  renderQProgress();
+  const explain = document.getElementById('explain');
+  explain.style.display = 'block';
+  explain.textContent = item.explain;
+  const nav = document.getElementById('qnav');
+  if (qCurrent < quiz.length - 1) {
+    nav.innerHTML = '<button class="icon-r" onclick="nextQuestion()">Next question</button>';
+  } else {
+    nav.innerHTML = '<button class="icon-r" onclick="showScore()">See final score</button>';
+  }
+}
+
+function nextQuestion() {
+  qCurrent++;
+  renderQuestion();
+}
+
+function showScore() {
+  document.getElementById('progress').textContent = '';
+  document.getElementById('qnav').innerHTML = '';
+  const pct = Math.round((qScore / quiz.length) * 100);
+  let msg = "Solid grasp of the fundamentals.";
+  if (pct === 100) msg = "Perfect score, the whole cycle is clear to you.";
+  else if (pct < 60) msg = "Worth a re-read of the phase explanations above.";
+  document.getElementById('qcard').innerHTML =
+    '<div class="q-score">' +
+    '<p style="font-size:14px;color:var(--text-secondary);margin:0">You scored</p>' +
+    '<p class="q-score-num">' + qScore + ' / ' + quiz.length + '</p>' +
+    '<p style="font-size:14px;color:var(--text-secondary);margin:0 0 16px">' + msg + '</p>' +
+    '<button onclick="restartQuiz()">↻ Retake quiz</button>' +
+    '</div>';
+}
+
+function restartQuiz() {
+  qCurrent = 0;
+  qScore = 0;
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
