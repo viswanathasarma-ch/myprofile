@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction to CASE tools</title>
+<style>
+  :root {
+    --paper: #faf8f3;
+    --paper-soft: #f1ede2;
+    --ink: #23262b;
+    --ink-soft: #5b5d52;
+    --ink-faint: #93917f;
+    --rule: #d8d2c0;
+
+    --star: #4a6b3a;
+    --star-soft: #e8efe1;
+    --star-border: #bcd1a4;
+
+    --ea: #6b3a52;
+    --ea-soft: #f3e6ec;
+    --ea-border: #ddb3c8;
+
+    --vp: #8a5a1f;
+    --vp-soft: #faedd9;
+    --vp-border: #e8c084;
+
+    --lucid: #2f5fa3;
+    --lucid-soft: #e7eef9;
+    --lucid-border: #b9cde8;
+
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+  }
+
+  .mono { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  header.top {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 14px;
+    margin-bottom: 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  header.top .label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  h1 {
+    font-size: 27px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+
+  p.sub {
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin: 0 0 2.5rem;
+    max-width: 600px;
+  }
+
+  h2.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+
+  p.section-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0 0 1.5rem;
+    max-width: 620px;
+  }
+
+  section { margin-bottom: 3rem; }
+
+  /* ---------- intro callout ---------- */
+  .callout {
+    background: var(--paper-soft);
+    border-left: 3px solid var(--ink);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 18px;
+    margin: 0 0 2.5rem;
+    font-size: 14px;
+  }
+
+  .callout strong { font-weight: 600; }
+
+  /* ---------- tool cards ---------- */
+  .tool-card {
+    border-radius: var(--radius);
+    padding: 20px 22px 18px;
+    margin-bottom: 18px;
+    border: 1.5px solid var(--rule);
+  }
+
+  .tool-card.star { border-color: var(--star-border); background: var(--star-soft); }
+  .tool-card.ea { border-color: var(--ea-border); background: var(--ea-soft); }
+  .tool-card.vp { border-color: var(--vp-border); background: var(--vp-soft); }
+  .tool-card.lucid { border-color: var(--lucid-border); background: var(--lucid-soft); }
+
+  .tool-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .tool-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .star .tool-icon { background: var(--star); }
+  .ea .tool-icon { background: var(--ea); }
+  .vp .tool-icon { background: var(--vp); }
+  .lucid .tool-icon { background: var(--lucid); }
+
+  .tool-name {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .tool-tag {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .star .tool-tag { color: var(--star); }
+  .ea .tool-tag { color: var(--ea); }
+  .vp .tool-tag { color: var(--vp); }
+  .lucid .tool-tag { color: var(--lucid); }
+
+  .tool-card p.desc {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0 0 12px;
+  }
+
+  .tool-meta {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  .tool-meta .meta-item strong {
+    display: block;
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .tool-card .student-line {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    font-size: 13.5px;
+  }
+
+  .tool-card .student-line strong { font-weight: 600; }
+
+  /* ---------- comparison table ---------- */
+  .compare-wrap {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    min-width: 640px;
+  }
+
+  table.compare th, table.compare td {
+    border: 1px solid var(--rule);
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  table.compare th {
+    background: var(--paper-soft);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  table.compare td.row-label {
+    font-weight: 600;
+    background: var(--paper-soft);
+    white-space: nowrap;
+  }
+
+  table.compare th.star-col, table.compare td.star-col { background: var(--star-soft); }
+  table.compare th.ea-col, table.compare td.ea-col { background: var(--ea-soft); }
+  table.compare th.vp-col, table.compare td.vp-col { background: var(--vp-soft); }
+  table.compare th.lucid-col, table.compare td.lucid-col { background: var(--lucid-soft); }
+
+  /* ---------- decision helper ---------- */
+  .decision-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .decision-grid { grid-template-columns: 1fr; }
+  }
+
+  .decision-item {
+    background: var(--paper-soft);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 13.5px;
+  }
+
+  .decision-item .q {
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  .decision-item .a {
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .decision-item .a strong {
+    color: var(--ink);
+  }
+
+  footer.page-footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 3rem;
+  }
+
+  .sources-note {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    margin-top: 2rem;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="top">
+    <span class="label mono">CASE tools</span>
+    <span class="label mono">overview</span>
+  </header>
+
+  <h1>Introduction to CASE tools</h1>
+  <p class="sub">CASE stands for Computer-Aided Software Engineering — software that helps engineers design, document, and manage other software, instead of relying on whiteboards and word processors.</p>
+
+  <div class="callout">
+    <strong>Why this matters:</strong> in the System Design phase of the SDLC, engineers need to draw class diagrams, sequence diagrams, and architecture plans that everyone on the team can read the same way. CASE tools exist to make those diagrams accurate, reusable, and easy to update as the design changes.
+  </div>
+
+  <section id="tools">
+    <h2 class="section-title">The four tools</h2>
+    <p class="section-sub">Same general purpose, four different philosophies: free and open vs. paid and enterprise-grade, desktop software vs. browser-based.</p>
+
+    <div class="tool-card star">
+      <div class="tool-head">
+        <div class="tool-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1L12.5 7H19L13.5 11L15.5 18L10 14L4.5 18L6.5 11L1 7H7.5L10 1Z" fill="white"/></svg>
+        </div>
+        <div>
+          <p class="tool-tag">free &amp; open-source</p>
+          <p class="tool-name">StarUML</p>
+        </div>
+      </div>
+      <p class="desc">A lightweight UML modeling tool built specifically for drawing class diagrams, sequence diagrams, and use case diagrams. It's a focused tool: it does UML, and does it well, without trying to be a project management suite too.</p>
+      <div class="tool-meta">
+        <div class="meta-item"><strong>Cost</strong>Free, open-source</div>
+        <div class="meta-item"><strong>Platform</strong>Desktop, mainly Windows</div>
+        <div class="meta-item"><strong>Best for</strong>Pure UML diagramming</div>
+      </div>
+      <p class="student-line"><strong>Where you'd use it:</strong> drawing the class diagram for an assignment or college project where you just need clean, standard UML and don't want to pay for anything.</p>
+    </div>
+
+    <div class="tool-card ea">
+      <div class="tool-head">
+        <div class="tool-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="6" height="6" rx="1" fill="white"/><rect x="12" y="2" width="6" height="6" rx="1" fill="white"/><rect x="7" y="12" width="6" height="6" rx="1" fill="white"/><path d="M5 8V10H15V8" stroke="white" stroke-width="1.2" fill="none"/><path d="M10 10V12" stroke="white" stroke-width="1.2"/></svg>
+        </div>
+        <div>
+          <p class="tool-tag">paid, enterprise-grade</p>
+          <p class="tool-name">Enterprise Architect</p>
+        </div>
+      </div>
+      <p class="desc">Made by Sparx Systems, this is a full enterprise modeling platform: it supports UML alongside many other modeling languages, handles huge models for large organizations, and adds requirements tracing, simulation, and code generation on top of diagramming.</p>
+      <div class="tool-meta">
+        <div class="meta-item"><strong>Cost</strong>Roughly $229–$699 per tier; free read-only viewer exists; academic pricing available for students</div>
+        <div class="meta-item"><strong>Platform</strong>Desktop (Windows)</div>
+        <div class="meta-item"><strong>Best for</strong>Large, complex enterprise systems</div>
+      </div>
+      <p class="student-line"><strong>Where you'd use it:</strong> less common for a single classroom assignment because of cost and complexity, but worth knowing about since it's a real industry standard you may meet in a job after graduating.</p>
+    </div>
+
+    <div class="tool-card vp">
+      <div class="tool-head">
+        <div class="tool-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="6" cy="6" r="3" fill="white"/><circle cx="14" cy="6" r="3" fill="white"/><circle cx="10" cy="14" r="3" fill="white"/><path d="M8 8L12 8M7 9L9 12M13 9L11 12" stroke="white" stroke-width="1" fill="none"/></svg>
+        </div>
+        <div>
+          <p class="tool-tag">free community edition + paid tiers</p>
+          <p class="tool-name">Visual Paradigm</p>
+        </div>
+      </div>
+      <p class="desc">A modeling tool that covers UML, BPMN (business process diagrams), and entity-relationship diagrams in one application, aimed at taking a project from requirements through to design. The free Community Edition is genuinely usable, but real-time team collaboration is reserved for paid plans.</p>
+      <div class="tool-meta">
+        <div class="meta-item"><strong>Cost</strong>Free Community Edition; paid plans for collaboration features</div>
+        <div class="meta-item"><strong>Platform</strong>Desktop, cross-platform</div>
+        <div class="meta-item"><strong>Best for</strong>Covering UML, BPMN, and ER diagrams in one tool</div>
+      </div>
+      <p class="student-line"><strong>Where you'd use it:</strong> a group project that needs more than just UML, say a use case diagram plus a database ER diagram plus a process flow, all without switching applications.</p>
+    </div>
+
+    <div class="tool-card lucid">
+      <div class="tool-head">
+        <div class="tool-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="white" stroke-width="1.3" fill="none"/><path d="M2 7H18" stroke="white" stroke-width="1.3"/><circle cx="5" cy="5" r="0.8" fill="white"/></svg>
+        </div>
+        <div>
+          <p class="tool-tag">browser-based, freemium</p>
+          <p class="tool-name">Lucidchart</p>
+        </div>
+      </div>
+      <p class="desc">A diagramming tool that runs entirely in a web browser rather than installed software, built for quick, collaborative diagrams. It covers UML too, but it's equally used for flowcharts, org charts, and general process diagrams, with real-time multi-person editing built in from the start.</p>
+      <div class="tool-meta">
+        <div class="meta-item"><strong>Cost</strong>Free tier with limits; paid subscription for full features</div>
+        <div class="meta-item"><strong>Platform</strong>Any browser, plus mobile apps</div>
+        <div class="meta-item"><strong>Best for</strong>Fast, collaborative diagramming, not UML-specific</div>
+      </div>
+      <p class="student-line"><strong>Where you'd use it:</strong> a group project where teammates are on different laptops and operating systems and need to edit the same diagram together in real time without installing anything.</p>
+    </div>
+  </section>
+
+  <section id="compare">
+    <h2 class="section-title">Side-by-side comparison</h2>
+    <p class="section-sub">The same four tools, lined up on the dimensions that actually decide which one to reach for.</p>
+
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th class="star-col">StarUML</th>
+            <th class="ea-col">Enterprise Architect</th>
+            <th class="vp-col">Visual Paradigm</th>
+            <th class="lucid-col">Lucidchart</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-label">Cost</td>
+            <td class="star-col">Free</td>
+            <td class="ea-col">Paid (~$229–$699); free viewer exists</td>
+            <td class="vp-col">Free Community Edition; paid for teams</td>
+            <td class="lucid-col">Free tier; paid for full features</td>
+          </tr>
+          <tr>
+            <td class="row-label">Runs on</td>
+            <td class="star-col">Desktop, mainly Windows</td>
+            <td class="ea-col">Desktop (Windows)</td>
+            <td class="vp-col">Desktop, cross-platform</td>
+            <td class="lucid-col">Any browser + mobile</td>
+          </tr>
+          <tr>
+            <td class="row-label">Diagram scope</td>
+            <td class="star-col">UML-focused</td>
+            <td class="ea-col">UML + many other notations (SysML, BPMN, ArchiMate)</td>
+            <td class="vp-col">UML, BPMN, ER diagrams</td>
+            <td class="lucid-col">UML plus general-purpose diagrams</td>
+          </tr>
+          <tr>
+            <td class="row-label">Real-time team editing</td>
+            <td class="star-col">No</td>
+            <td class="ea-col">Yes, on paid team editions</td>
+            <td class="vp-col">Paid plans only</td>
+            <td class="lucid-col">Yes, built in from the free tier</td>
+          </tr>
+          <tr>
+            <td class="row-label">Learning curve</td>
+            <td class="star-col">Gentle</td>
+            <td class="ea-col">Steep, built for complex projects</td>
+            <td class="vp-col">Moderate</td>
+            <td class="lucid-col">Gentle, drag-and-drop</td>
+          </tr>
+          <tr>
+            <td class="row-label">Typical user</td>
+            <td class="star-col">Student, solo developer</td>
+            <td class="ea-col">Large enterprise teams</td>
+            <td class="vp-col">Small-to-mid teams needing multiple diagram types</td>
+            <td class="lucid-col">Any team wanting quick, shared diagrams</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sources-note">Pricing and feature details reflect each vendor's public information as of 2026 and may change; always check the vendor's site for current pricing before purchasing.</p>
+  </section>
+
+  <section id="decision">
+    <h2 class="section-title">Which one should you actually pick?</h2>
+    <p class="section-sub">A few quick scenarios students commonly run into.</p>
+    <div class="decision-grid">
+      <div class="decision-item">
+        <p class="q">"I just need one class diagram for an assignment."</p>
+        <p class="a">→ <strong>StarUML</strong>, free and purpose-built for exactly this.</p>
+      </div>
+      <div class="decision-item">
+        <p class="q">"My team is split across Mac and Windows laptops."</p>
+        <p class="a">→ <strong>Lucidchart</strong>, since it runs in any browser.</p>
+      </div>
+      <div class="decision-item">
+        <p class="q">"I need a class diagram, an ER diagram, and a process flow for one project."</p>
+        <p class="a">→ <strong>Visual Paradigm</strong>, which covers all three in one app.</p>
+      </div>
+      <div class="decision-item">
+        <p class="q">"I'm modeling a large, multi-team enterprise system."</p>
+        <p class="a">→ <strong>Enterprise Architect</strong>, built for that scale of complexity.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">Standalone reference page · works fully offline, no internet connection required</footer>
+
+</div>
+</body>
+</html>
