@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My courses</title>
+<title>Viswanathasarma Ch — Courses</title>
 <style>
   :root {
     --paper: #faf8f3;
@@ -12,14 +12,24 @@
     --ink-soft: #5b5d52;
     --ink-faint: #93917f;
     --rule: #d8d2c0;
-    --oose: #44546b;
-    --oose-soft: #e7eaef;
-    --oose-tick: #2f3d50;
+
+    --oose: #2f5fa3;
+    --oose-soft: #e7eef9;
+    --oose-border: #b9cde8;
+
     --r: #3a7263;
     --r-soft: #e6eee9;
-    --r-tick: #2a5648;
+    --r-border: #b9d6c9;
+
     --amber: #9a6b1f;
     --amber-soft: #f5ead2;
+
+    --code-bg: #1f2430;
+    --code-text: #e6e2d3;
+    --code-comment: #8a917d;
+    --code-string: #c9a25c;
+    --code-key: #7fa8d9;
+
     --radius: 10px;
   }
 
@@ -30,466 +40,802 @@
     background: var(--paper);
     color: var(--ink);
     font-family: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
-  .mono {
-    font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  .mono { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+
+  a { color: inherit; }
+
+  /* ---------- site header ---------- */
+  header.site-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1.4rem 1.5rem;
   }
 
-  .page {
-    max-width: 880px;
+  .site-header-inner {
+    max-width: 920px;
     margin: 0 auto;
-    padding: 3rem 1.5rem 5rem;
-  }
-
-  header.spine {
     display: flex;
-    align-items: baseline;
     justify-content: space-between;
-    border-bottom: 2px solid var(--ink);
-    padding-bottom: 14px;
-    margin-bottom: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
-  header.spine .label {
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
+  .brand {
+    display: flex;
+    flex-direction: column;
   }
 
-  h1 {
-    font-size: 28px;
-    font-weight: 600;
-    margin: 18px 0 6px;
+  .brand .name {
+    font-size: 20px;
+    font-weight: 700;
     letter-spacing: -0.01em;
   }
 
-  .sub {
+  .brand .tagline {
+    font-size: 12.5px;
+    color: #b9b6a8;
+    margin-top: 2px;
+  }
+
+  nav.site-nav {
+    display: flex;
+    gap: 18px;
+    font-size: 13.5px;
+  }
+
+  nav.site-nav button {
+    background: none;
+    border: none;
+    color: var(--paper);
+    font-family: inherit;
+    font-size: 13.5px;
+    cursor: pointer;
+    padding: 6px 0;
+    opacity: 0.85;
+    border-bottom: 2px solid transparent;
+  }
+
+  nav.site-nav button:hover { opacity: 1; }
+  nav.site-nav button.active { opacity: 1; border-bottom-color: var(--paper); }
+
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ---------- home / catalog ---------- */
+  h1.page-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+
+  p.page-sub {
     font-size: 15px;
     color: var(--ink-soft);
-    margin: 0 0 2.5rem;
-    max-width: 520px;
+    margin: 0 0 2.25rem;
+    max-width: 580px;
   }
 
   .stats-row {
     display: flex;
     gap: 28px;
-    margin-bottom: 2.75rem;
+    margin-bottom: 2.5rem;
     flex-wrap: wrap;
   }
 
-  .stat {
-    font-size: 13px;
-    color: var(--ink-soft);
-  }
-
+  .stat { font-size: 13px; color: var(--ink-soft); }
   .stat strong {
     display: block;
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--ink);
     font-family: "SF Mono", Menlo, Consolas, monospace;
   }
 
-  .cards {
+  .catalog-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 22px;
+    gap: 20px;
   }
 
-  @media (max-width: 720px) {
-    .cards { grid-template-columns: 1fr; }
+  @media (max-width: 700px) {
+    .catalog-cards { grid-template-columns: 1fr; }
   }
 
-  .card {
-    background: var(--paper);
-    border: 1.5px solid var(--ink);
+  .catalog-card {
+    border: 1.5px solid var(--rule);
     border-radius: var(--radius);
-    padding: 22px 22px 20px;
-    position: relative;
-    overflow: hidden;
+    padding: 20px;
+    cursor: pointer;
+    text-align: left;
+    background: var(--paper);
+    transition: transform .12s, box-shadow .12s;
+    font-family: inherit;
   }
 
-  .card.oose { border-color: var(--oose); }
-  .card.r-course { border-color: var(--r); }
-
-  .motif {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    opacity: 0.5;
-    pointer-events: none;
+  .catalog-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(35,38,43,0.08);
   }
 
-  .card-eyebrow {
+  .catalog-card.oose { border-color: var(--oose-border); background: var(--oose-soft); }
+  .catalog-card.r-course { border-color: var(--r-border); background: var(--r-soft); }
+
+  .catalog-card .eyebrow {
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 6px;
   }
 
-  .card.oose .card-eyebrow { color: var(--oose); }
-  .card.r-course .card-eyebrow { color: var(--r); }
+  .catalog-card.oose .eyebrow { color: var(--oose); }
+  .catalog-card.r-course .eyebrow { color: var(--r); }
 
-  .card h2 {
-    font-size: 21px;
-    font-weight: 600;
-    margin: 0 0 4px;
-    padding-right: 50px;
-  }
+  .catalog-card h2 { font-size: 19px; font-weight: 700; margin: 0 0 4px; }
+  .catalog-card .full-name { font-size: 13px; color: var(--ink-faint); margin: 0 0 12px; }
+  .catalog-card .desc { font-size: 13.5px; color: var(--ink-soft); margin: 0 0 16px; }
 
-  .card .full-name {
-    font-size: 13px;
-    color: var(--ink-faint);
-    margin: 0 0 14px;
-  }
-
-  .card .desc {
-    font-size: 14px;
-    color: var(--ink-soft);
-    margin: 0 0 18px;
-  }
-
-  .progress-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-
+  .progress-row { display: flex; align-items: center; gap: 10px; }
   .progress-track {
-    flex: 1;
-    height: 6px;
-    border-radius: 3px;
-    background: var(--paper-soft);
+    flex: 1; height: 6px; border-radius: 3px;
+    background: var(--paper-soft); border: 1px solid var(--rule); overflow: hidden;
+  }
+  .progress-fill { height: 100%; width: 0%; transition: width .2s ease; }
+  .oose .progress-fill { background: var(--oose); }
+  .r-course .progress-fill { background: var(--r); }
+  .progress-label { font-size: 12px; font-family: monospace; color: var(--ink-soft); min-width: 38px; text-align: right; }
+
+  /* ---------- course page ---------- */
+  .back-link {
+    background: none; border: none; font-family: inherit; cursor: pointer;
+    font-size: 13px; color: var(--ink-soft); padding: 0; margin-bottom: 1.5rem;
+  }
+  .back-link:hover { color: var(--ink); }
+
+  .course-head { margin-bottom: 1.5rem; }
+  .course-eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+  .oose-theme .course-eyebrow { color: var(--oose); }
+  .r-theme .course-eyebrow { color: var(--r); }
+  .course-head h1 { margin: 0 0 4px; }
+  .course-head .full-name { font-size: 14px; color: var(--ink-faint); margin: 0; }
+
+  .course-tabs {
+    display: flex; gap: 6px; margin-bottom: 1.75rem; flex-wrap: wrap;
+    border-bottom: 1.5px solid var(--rule);
+  }
+  .course-tabs button {
+    font-family: inherit; font-size: 13.5px; padding: 10px 16px;
+    background: none; border: none; cursor: pointer; color: var(--ink-soft);
+    border-bottom: 2.5px solid transparent; margin-bottom: -1.5px;
+  }
+  .oose-theme .course-tabs button.active { color: var(--oose); border-bottom-color: var(--oose); }
+  .r-theme .course-tabs button.active { color: var(--r); border-bottom-color: var(--r); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ---------- notes / topics ---------- */
+  .topic-block {
     border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
     overflow: hidden;
   }
 
-  .progress-fill {
-    height: 100%;
-    width: 0%;
-    transition: width .25s ease;
-  }
-
-  .card.oose .progress-fill { background: var(--oose); }
-  .card.r-course .progress-fill { background: var(--r); }
-
-  .progress-label {
-    font-size: 12px;
-    font-family: "SF Mono", Menlo, Consolas, monospace;
-    color: var(--ink-soft);
-    min-width: 40px;
-    text-align: right;
-  }
-
-  .section-label {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin: 0 0 8px;
-    font-weight: 600;
-  }
-
-  .topic-list {
-    list-style: none;
-    margin: 0 0 20px;
-    padding: 0;
-    border-left: 2px solid var(--rule);
-  }
-
-  .topic-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 7px 0 7px 14px;
-    margin-left: -1.5px;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .tick {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    border: 1.5px solid var(--rule);
-    flex-shrink: 0;
-    margin-top: 1px;
+  .topic-header {
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: background .15s, border-color .15s;
+    gap: 10px;
+    padding: 14px 16px;
+    background: var(--paper-soft);
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
   }
 
-  .tick svg {
-    width: 10px;
-    height: 10px;
-    opacity: 0;
-    transition: opacity .1s;
+  .topic-header .tick {
+    width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--rule);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
   }
+  .oose-theme .tick.checked { background: var(--oose); border-color: var(--oose); }
+  .r-theme .tick.checked { background: var(--r); border-color: var(--r); }
+  .tick svg { width: 11px; height: 11px; opacity: 0; }
+  .tick.checked svg { opacity: 1; }
 
-  .topic-item.done .tick svg { opacity: 1; }
-
-  .card.oose .tick.checked { background: var(--oose); border-color: var(--oose); }
-  .card.r-course .tick.checked { background: var(--r); border-color: var(--r); }
-
-  .topic-text {
-    font-size: 14px;
-    color: var(--ink);
+  .topic-header .t-title {
+    flex: 1;
+    font-size: 14.5px;
+    font-weight: 600;
   }
+  .topic-header.done .t-title { color: var(--ink-faint); }
 
-  .topic-item.done .topic-text {
-    color: var(--ink-faint);
-    text-decoration: line-through;
-    text-decoration-color: var(--rule);
-  }
-
-  .resources {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .resources li {
-    margin-bottom: 6px;
-  }
-
-  .resources a {
-    font-size: 13px;
-    text-decoration: none;
-    color: var(--amber);
-    border-bottom: 1px solid var(--amber-soft);
-    padding-bottom: 1px;
-  }
-
-  .resources a:hover {
-    border-bottom-color: var(--amber);
-  }
-
-  .resources .res-note {
-    color: var(--ink-faint);
+  .topic-header .chevron {
     font-size: 12px;
+    color: var(--ink-faint);
+    transition: transform .15s;
   }
+  .topic-header.open .chevron { transform: rotate(90deg); }
+
+  .topic-body {
+    padding: 4px 18px 18px 44px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    display: none;
+  }
+  .topic-body.open { display: block; }
+  .topic-body p { margin: 0 0 10px; }
+  .topic-body .example-box {
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 8px;
+    padding: 10px 12px; font-size: 13px; margin-top: 8px;
+  }
+
+  .code-block {
+    background: var(--code-bg); color: var(--code-text); border-radius: 8px;
+    padding: 14px 16px; font-family: monospace; font-size: 12.5px;
+    line-height: 1.7; overflow-x: auto; white-space: pre; margin: 10px 0 0;
+  }
+  .code-block .c { color: var(--code-comment); }
+  .code-block .s { color: var(--code-string); }
+  .code-block .k { color: var(--code-key); }
+
+  /* ---------- quiz ---------- */
+  .q-progress { font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; min-height: 16px; }
+  .q-card { background: var(--paper-soft); border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--rule); }
+  .q-text { font-size: 15px; font-weight: 600; margin: 0 0 14px; }
+  .q-opt {
+    display: block; width: 100%; text-align: left; padding: 10px 14px; margin-bottom: 8px;
+    border-radius: 8px; border: 1px solid var(--rule); background: var(--paper);
+    font-size: 14px; cursor: pointer; font-family: inherit;
+  }
+  .q-opt:hover:not(:disabled) { border-color: var(--ink-faint); }
+  .q-opt.correct { border-color: #97c459; background: #eaf3de; color: #3b6d11; }
+  .q-opt.wrong { border-color: #f09595; background: #fcebeb; color: #a32d2d; }
+  .q-opt:disabled { cursor: default; }
+  .q-explain {
+    font-size: 13px; line-height: 1.6; color: var(--ink-soft);
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--rule);
+  }
+  .q-nav { display: flex; justify-content: flex-end; margin-top: 1rem; }
+  .q-score { text-align: center; padding: 2rem 1rem; }
+  .q-score-num { font-size: 32px; font-weight: 700; margin: 8px 0; }
+
+  button.primary-btn {
+    font-family: inherit; font-size: 14px; padding: 9px 16px; border-radius: 8px;
+    border: 1.5px solid var(--ink); background: var(--paper); color: var(--ink); cursor: pointer;
+  }
+  button.primary-btn:hover { background: var(--ink); color: var(--paper); }
+
+  /* ---------- materials ---------- */
+  .section-label {
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-faint); margin: 0 0 10px; font-weight: 700;
+  }
+  .resources { list-style: none; margin: 0 0 1.75rem; padding: 0; }
+  .resources li { margin-bottom: 8px; }
+  .resources a {
+    font-size: 13.5px; text-decoration: none; color: var(--amber);
+    border-bottom: 1px solid var(--amber-soft); padding-bottom: 1px;
+  }
+  .resources a:hover { border-bottom-color: var(--amber); }
+  .res-note { color: var(--ink-faint); font-size: 12.5px; }
+
+  textarea.notes-area {
+    width: 100%; min-height: 180px; font-family: inherit; font-size: 14px;
+    padding: 14px; border-radius: var(--radius); border: 1.5px solid var(--rule);
+    background: var(--paper); color: var(--ink); resize: vertical; line-height: 1.6;
+  }
+  textarea.notes-area:focus { outline: none; border-color: var(--ink-faint); }
+
+  .save-row {
+    display: flex; align-items: center; gap: 10px; margin-top: 10px;
+  }
+  .save-status { font-size: 12px; color: var(--ink-faint); }
 
   footer.page-footer {
-    text-align: center;
-    font-size: 12px;
-    color: var(--ink-faint);
-    margin-top: 3.5rem;
-  }
-
-  footer.page-footer button {
-    font-family: inherit;
-    font-size: 12px;
-    color: var(--ink-faint);
-    background: none;
-    border: none;
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 0;
+    text-align: center; font-size: 12px; color: var(--ink-faint); margin-top: 3.5rem;
   }
 </style>
 </head>
 <body>
-<div class="page">
 
-  <header class="spine">
-    <div>
-      <span class="label mono">study tracker</span>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="brand">
+        <span class="name">Viswanathasarma Ch</span>
+        <span class="tagline">blog · courses · self-study notes</span>
+      </div>
+      <nav class="site-nav">
+        <button id="navHome" class="active" onclick="showView('home')">Home</button>
+        <button onclick="showView('oose')">OOSE</button>
+        <button onclick="showView('r')">R Programming</button>
+      </nav>
     </div>
-    <div class="label mono" id="todayLabel"></div>
   </header>
 
-  <h1>My courses</h1>
-  <p class="sub">Two courses in progress. Check off topics as you study them — progress is saved on this device.</p>
+  <div class="page">
 
-  <div class="stats-row">
-    <div class="stat">Courses<strong>2</strong></div>
-    <div class="stat">Topics total<strong id="totalTopics">0</strong></div>
-    <div class="stat">Topics studied<strong id="totalDone">0</strong></div>
-  </div>
+    <!-- ============ HOME / CATALOG ============ -->
+    <div class="view active" id="view-home">
+      <h1 class="page-title">My courses</h1>
+      <p class="page-sub">Two courses, each with notes, a quiz, and study materials. Click a course to open it.</p>
 
-  <div class="cards">
-
-    <div class="card oose" id="card-oose">
-      <svg class="motif" width="44" height="44" viewBox="0 0 44 44" fill="none">
-        <rect x="2" y="2" width="16" height="11" rx="1.5" stroke="#44546b" stroke-width="1.2"/>
-        <rect x="26" y="2" width="16" height="11" rx="1.5" stroke="#44546b" stroke-width="1.2"/>
-        <rect x="14" y="28" width="16" height="11" rx="1.5" stroke="#44546b" stroke-width="1.2"/>
-        <path d="M10 13V20H22V13" stroke="#44546b" stroke-width="1.2" fill="none"/>
-        <path d="M34 13V20H22V13" stroke="#44546b" stroke-width="1.2" fill="none"/>
-        <path d="M22 20V28" stroke="#44546b" stroke-width="1.2" fill="none"/>
-      </svg>
-      <p class="card-eyebrow mono">course 01</p>
-      <h2>OOSE</h2>
-      <p class="full-name">Object-Oriented Software Engineering</p>
-      <p class="desc">How software gets designed and built around objects rather than procedures — classes, relationships, UML diagrams, design patterns, and the engineering practices that turn a design into a maintainable system.</p>
-
-      <div class="progress-row">
-        <div class="progress-track"><div class="progress-fill" id="fill-oose"></div></div>
-        <span class="progress-label mono" id="label-oose">0/8</span>
+      <div class="stats-row">
+        <div class="stat">Courses<strong>2</strong></div>
+        <div class="stat">Topics total<strong id="homeTotalTopics">0</strong></div>
+        <div class="stat">Topics studied<strong id="homeTotalDone">0</strong></div>
       </div>
 
-      <p class="section-label">Topics</p>
-      <ul class="topic-list" id="topics-oose"></ul>
+      <div class="catalog-cards">
+        <button class="catalog-card oose" onclick="showView('oose')">
+          <p class="eyebrow">course 01</p>
+          <h2>OOSE</h2>
+          <p class="full-name">Object-Oriented Software Engineering</p>
+          <p class="desc">Classes, objects, UML diagrams, design patterns, and the engineering practices behind building maintainable software.</p>
+          <div class="progress-row">
+            <div class="progress-track"><div class="progress-fill" id="homeFill-oose"></div></div>
+            <span class="progress-label" id="homeLabel-oose">0/6</span>
+          </div>
+        </button>
 
-      <p class="section-label">Study resources</p>
-      <ul class="resources">
-        <li><a href="https://www.geeksforgeeks.org/object-oriented-analysis-and-design/" target="_blank" rel="noopener">GeeksforGeeks — object-oriented analysis & design</a></li>
-        <li><a href="https://www.tutorialspoint.com/uml/index.htm" target="_blank" rel="noopener">TutorialsPoint — UML tutorial</a></li>
-        <li><a href="https://refactoring.guru/design-patterns" target="_blank" rel="noopener">Refactoring Guru — design patterns catalog</a></li>
-        <li><button onclick="window.location.href='case_tools_intro.html'">Case Tools</button></li>
-	<li><span class="res-note">+ add your own course slides or textbook PDF link here</span></li>
-      </ul>
+        <button class="catalog-card r-course" onclick="showView('r')">
+          <p class="eyebrow">course 02</p>
+          <h2>R Programming</h2>
+          <p class="full-name">Statistical computing and data analysis</p>
+          <p class="desc">Vectors, data frames, plotting, and the basics of statistical thinking, all built around R's data-first design.</p>
+          <div class="progress-row">
+            <div class="progress-track"><div class="progress-fill" id="homeFill-r"></div></div>
+            <span class="progress-label" id="homeLabel-r">0/6</span>
+          </div>
+        </button>
+      </div>
     </div>
 
-    <div class="card r-course" id="card-r">
-      <svg class="motif" width="44" height="44" viewBox="0 0 44 44" fill="none">
-        <circle cx="8" cy="32" r="2.4" fill="#3a7263"/>
-        <circle cx="16" cy="20" r="2.4" fill="#3a7263"/>
-        <circle cx="24" cy="26" r="2.4" fill="#3a7263"/>
-        <circle cx="32" cy="10" r="2.4" fill="#3a7263"/>
-        <circle cx="38" cy="18" r="2.4" fill="#3a7263"/>
-        <circle cx="12" cy="8" r="2.4" fill="#3a7263"/>
-        <path d="M4 38H40" stroke="#3a7263" stroke-width="1.2"/>
-        <path d="M4 38V4" stroke="#3a7263" stroke-width="1.2"/>
-      </svg>
-      <p class="card-eyebrow mono">course 02</p>
-      <h2>R Programming</h2>
-      <p class="full-name">Statistical computing and data analysis</p>
-      <p class="desc">A language built for data first — vectors and data frames instead of loops, built-in statistics, and plotting that turns a column of numbers into a chart in one line.</p>
-
-      <div class="progress-row">
-        <div class="progress-track"><div class="progress-fill" id="fill-r"></div></div>
-        <span class="progress-label mono" id="label-r">0/8</span>
+    <!-- ============ OOSE COURSE PAGE ============ -->
+    <div class="view" id="view-oose">
+      <button class="back-link" onclick="showView('home')">&larr; Back to courses</button>
+      <div class="course-head oose-theme">
+        <p class="course-eyebrow">course 01</p>
+        <h1>OOSE</h1>
+        <p class="full-name">Object-Oriented Software Engineering</p>
       </div>
 
-      <p class="section-label">Topics</p>
-      <ul class="topic-list" id="topics-r"></ul>
+      <div class="course-tabs oose-theme" id="tabs-oose"></div>
 
-      <p class="section-label">Study resources</p>
-      <ul class="resources">
-        <li><a href="https://www.w3schools.com/r/" target="_blank" rel="noopener">W3Schools — R tutorial</a></li>
-        <li><a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html" target="_blank" rel="noopener">CRAN — official introduction to R</a></li>
-        <li><a href="https://r4ds.hadley.nz/" target="_blank" rel="noopener">R for Data Science (free online book)</a></li>
-        <button onclick="window.location.href='case_tools_intro.html'">Case Tools</button>
-	<li><span class="res-note">+ add your own course slides or textbook PDF link here</span></li>
-      </ul>
+      <div class="tab-panel active" id="panel-oose-notes"></div>
+      <div class="tab-panel" id="panel-oose-quiz"></div>
+      <div class="tab-panel" id="panel-oose-materials"></div>
+    </div>
+
+    <!-- ============ R COURSE PAGE ============ -->
+    <div class="view" id="view-r">
+      <button class="back-link" onclick="showView('home')">&larr; Back to courses</button>
+      <div class="course-head r-theme">
+        <p class="course-eyebrow">course 02</p>
+        <h1>R Programming</h1>
+        <p class="full-name">Statistical computing and data analysis</p>
+      </div>
+
+      <div class="course-tabs r-theme" id="tabs-r"></div>
+
+      <div class="tab-panel active" id="panel-r-notes"></div>
+      <div class="tab-panel" id="panel-r-quiz"></div>
+      <div class="tab-panel" id="panel-r-materials"></div>
     </div>
 
   </div>
 
-  <footer class="page-footer">
-    Progress is stored only in this browser. <button onclick="resetProgress()">Reset all progress</button>
-  </footer>
-
-</div>
+  <footer class="page-footer">Standalone page · works fully offline · progress and notes save in this browser only</footer>
 
 <script>
-const courses = {
+/* ================== DATA ================== */
+
+const courseData = {
   oose: {
-    storageKey: 'oose_progress_v1',
+    theme: 'oose-theme',
+    storagePrefix: 'oose',
     topics: [
-      "Object-oriented concepts: classes, objects, encapsulation",
-      "Inheritance, polymorphism, abstraction",
-      "UML class diagrams",
-      "UML sequence and use case diagrams",
-      "Requirements analysis with use cases",
-      "Design patterns (creational, structural, behavioral)",
-      "Software architecture and modularity",
-      "Testing and maintaining object-oriented systems"
+      {
+        title: "Object-oriented concepts: classes, objects, encapsulation",
+        body: "A class is a blueprint that describes what attributes and methods every object made from it will have. An object is one real instance created from that class. Encapsulation means bundling an object's data and the methods that operate on that data together, while hiding the internal details from outside code.",
+        example: "Example: a Car class defines brand, color, and speed, plus an accelerate method. car1 = Car('Toyota', 'Red') creates one actual object with its own independent values."
+      },
+      {
+        title: "Inheritance, polymorphism, abstraction",
+        body: "Inheritance lets one class reuse and extend the attributes and methods of another, avoiding duplicate code. Polymorphism allows different classes to respond to the same method call in their own way. Abstraction means exposing only the essential details of an object while hiding the complex implementation underneath.",
+        example: "Example: a Vehicle class might be the parent of Car and Motorcycle. Both inherit a move() method but each implements it differently, that's polymorphism in action."
+      },
+      {
+        title: "UML class diagrams",
+        body: "A class diagram is a static picture of a system's classes, their attributes, their methods, and the relationships between them, such as inheritance or association. It's the most commonly used UML diagram in the design phase of the SDLC.",
+        example: "Example: a class diagram for a library system would show a Book class connected to a Member class, with a line showing that a Member can borrow many Books."
+      },
+      {
+        title: "UML sequence and use case diagrams",
+        body: "A use case diagram shows what a system does from the user's point of view, listing actors and the actions they can perform. A sequence diagram shows the order in which objects exchange messages over time to complete one specific task.",
+        example: "Example: for an ATM, a use case diagram shows 'Withdraw Cash' as an action a Customer actor can perform. A sequence diagram for the same action shows the exact order of messages between the customer, the ATM, and the bank's server."
+      },
+      {
+        title: "Design patterns (creational, structural, behavioral)",
+        body: "Design patterns are proven, reusable solutions to common design problems. Creational patterns deal with how objects get created (like Singleton or Factory). Structural patterns deal with how classes and objects are composed (like Adapter). Behavioral patterns deal with how objects communicate (like Observer).",
+        example: "Example: a notification system where many parts of an app need to react when new data arrives is a textbook use of the Observer pattern."
+      },
+      {
+        title: "Software architecture and modularity",
+        body: "Architecture is the high-level structure of a system: how it's broken into modules or layers and how those pieces communicate. Modularity means dividing a system into independent, focused pieces so each can be built, tested, and changed without breaking the rest.",
+        example: "Example: splitting an app into a UI layer, a business logic layer, and a database layer means the database can be swapped later without rewriting the UI."
+      }
+    ],
+    quiz: [
+      {
+        q: "What is the main difference between a class and an object?",
+        options: ["There is no difference, the terms are interchangeable", "A class is the blueprint; an object is a real instance created from it", "An object can have methods, but a class cannot", "A class is created at runtime; an object is written in code"],
+        correct: 1,
+        explain: "A class defines the structure (attributes and methods); an object is one actual instance built from that class, holding its own independent data."
+      },
+      {
+        q: "Encapsulation in object-oriented programming primarily refers to:",
+        options: ["Making a class inherit from multiple parent classes", "Bundling data and the methods that operate on it together, hiding internal details", "Writing the same method name in multiple classes", "Converting a class diagram into a sequence diagram"],
+        correct: 1,
+        explain: "Encapsulation bundles an object's internal state with the methods that act on it, and hides those internal details from code outside the object."
+      },
+      {
+        q: "Two classes, Car and Motorcycle, both inherit from Vehicle and each implements move() differently. This is an example of:",
+        options: ["Encapsulation", "Abstraction", "Polymorphism", "A UML use case diagram"],
+        correct: 2,
+        explain: "Polymorphism allows different classes sharing a common parent to respond to the same method call (move()) in their own specific way."
+      },
+      {
+        q: "Which UML diagram shows the exact order in which objects exchange messages to complete one task?",
+        options: ["Class diagram", "Use case diagram", "Sequence diagram", "Deployment diagram"],
+        correct: 2,
+        explain: "A sequence diagram is specifically about timing and order, showing the back-and-forth messages between objects over the course of one task."
+      },
+      {
+        q: "A notification system where many parts of an app must react automatically when new data arrives is a classic use case for which type of design pattern?",
+        options: ["Creational pattern", "Behavioral pattern (e.g. Observer)", "Structural pattern", "None, design patterns don't apply here"],
+        correct: 1,
+        explain: "This is a textbook Observer pattern scenario, a behavioral pattern concerned with how objects communicate and react to changes in each other."
+      }
+    ],
+    resources: [
+      { label: "GeeksforGeeks — object-oriented analysis & design", url: "https://www.geeksforgeeks.org/object-oriented-analysis-and-design/" },
+      { label: "TutorialsPoint — UML tutorial", url: "https://www.tutorialspoint.com/uml/index.htm" },
+      { label: "Refactoring Guru — design patterns catalog", url: "https://refactoring.guru/design-patterns" }
     ]
   },
+
   r: {
-    storageKey: 'r_progress_v1',
+    theme: 'r-theme',
+    storagePrefix: 'r',
     topics: [
-      "R syntax, variables, and data types",
-      "Vectors, lists, and factors",
-      "Data frames and importing data",
-      "Control structures and writing functions",
-      "Data cleaning with dplyr",
-      "Plotting with base R and ggplot2",
-      "Descriptive statistics and distributions",
-      "Basic hypothesis testing in R"
+      {
+        title: "R syntax, variables, and data types",
+        body: "R uses <- (or =) for assignment, and its core data types are numeric, character, logical, and integer. Variables don't need a declared type ahead of time, R figures it out from the value assigned.",
+        example: ""
+      },
+      {
+        title: "Vectors, lists, and factors",
+        body: "A vector is R's most basic structure, an ordered collection of values all of the same type. A list can hold mixed types together. A factor represents categorical data with a fixed set of possible levels, like 'Low', 'Medium', 'High'.",
+        example: ""
+      },
+      {
+        title: "Data frames and importing data",
+        body: "A data frame is a table, rows and columns, similar to a spreadsheet, where each column can hold a different data type. Data is commonly imported from CSV files using functions like read.csv().",
+        example: ""
+      },
+      {
+        title: "Control structures and writing functions",
+        body: "R supports if/else for decisions and for/while loops for repetition, though R encourages vectorized operations over explicit loops where possible. A custom function is defined with the function() keyword and can be reused anywhere in a script.",
+        example: ""
+      },
+      {
+        title: "Plotting with base R and ggplot2",
+        body: "Base R's plot() function creates quick charts directly from data. ggplot2 is a more powerful, widely used plotting package that builds charts in layers, starting from data and aesthetics and adding geometric shapes like points, lines, or bars on top.",
+        example: ""
+      },
+      {
+        title: "Descriptive statistics and basic hypothesis testing",
+        body: "Functions like mean(), median(), sd(), and summary() describe a dataset's central tendency and spread. Hypothesis tests, such as t.test(), help determine whether an observed difference between groups is likely to be real or just due to random chance.",
+        example: ""
+      }
+    ],
+    quiz: [
+      {
+        q: "Which symbol is most commonly used for assignment in R?",
+        options: ["=>", "<-", "::", "->>"],
+        correct: 1,
+        explain: "While = also works in most contexts, <- is the idiomatic R assignment operator you'll see in almost all R code and documentation."
+      },
+      {
+        q: "What is the key difference between a vector and a list in R?",
+        options: ["A vector can hold mixed data types; a list cannot", "A list can hold mixed data types; a vector holds only one type", "Vectors and lists are exactly the same in R", "A list can only contain numbers"],
+        correct: 1,
+        explain: "A vector requires every element to share the same data type. A list relaxes that rule and can mix numbers, strings, and other objects together."
+      },
+      {
+        q: "What is a data frame in R most similar to?",
+        options: ["A single number", "A spreadsheet-like table of rows and columns", "A function definition", "A plotting package"],
+        correct: 1,
+        explain: "A data frame organizes data into rows and columns, much like a spreadsheet, and is the standard structure for tabular data in R."
+      },
+      {
+        q: "Why does R encourage vectorized operations over explicit for loops where possible?",
+        options: ["Loops are not supported in R at all", "Vectorized operations are typically faster and more concise for whole-column operations", "Vectorized operations only work on text data", "There's no real reason, it's purely a stylistic preference"],
+        correct: 1,
+        explain: "R is built around operating on entire vectors or columns at once, which tends to be faster and cleaner than looping element by element."
+      },
+      {
+        q: "What does a function like t.test() help you determine?",
+        options: ["The exact plot colors to use in ggplot2", "Whether an observed difference between groups is likely real or due to chance", "How to import a CSV file", "The data type of a variable"],
+        correct: 1,
+        explain: "t.test() is a hypothesis test that helps assess whether a difference seen in the data is statistically meaningful or could plausibly be random noise."
+      }
+    ],
+    resources: [
+      { label: "W3Schools — R tutorial", url: "https://www.w3schools.com/r/" },
+      { label: "CRAN — official introduction to R", url: "https://cran.r-project.org/doc/manuals/r-release/R-intro.html" },
+      { label: "R for Data Science (free online book)", url: "https://r4ds.hadley.nz/" }
     ]
   }
 };
 
-function loadProgress(key) {
+const tabDefs = [
+  { key: 'notes', label: 'Notes' },
+  { key: 'quiz', label: 'Quiz' },
+  { key: 'materials', label: 'Materials' }
+];
+
+/* ================== STORAGE HELPERS ================== */
+
+function loadJSON(key, fallback) {
   try {
     const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : {};
-  } catc
-h (e) {
-    return {};
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) {
+    return fallback;
   }
 }
 
-function saveProgress(key, state) {
-  try {
-    localStorage.setItem(key, JSON.stringify(state));
-  } catch (e) {}
+function saveJSON(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
 }
 
 function tickSVG() {
   return '<svg viewBox="0 0 10 10" fill="none"><path d="M1 5L4 8L9 2" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 }
 
-function renderCourse(courseKey, listElId, fillElId, labelElId) {
-  const course = courses[courseKey];
-  const state = loadProgress(course.storageKey);
-  const listEl = document.getElementById(listElId);
-  listEl.innerHTML = '';
+/* ================== VIEW SWITCHING ================== */
 
-  course.topics.forEach((topic, i) => {
-    const li = document.createElement('li');
-    li.className = 'topic-item' + (state[i] ? ' done' : '');
-    li.innerHTML =
-      '<span class="tick' + (state[i] ? ' checked' : '') + '">' + tickSVG() + '</span>' +
-      '<span class="topic-text">' + topic + '</span>';
-    li.onclick = () => {
-      state[i] = !state[i];
-      saveProgress(course.storageKey, state);
-      renderCourse(courseKey, listElId, fillElId, labelElId);
-      updateTotals();
-    };
-    listEl.appendChild(li);
-  });
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
 
-  const doneCount = Object.values(state).filter(Boolean).length;
-  const pct = Math.round((doneCount / course.topics.length) * 100);
-  document.getElementById(fillElId).style.width = pct + '%';
-  document.getElementById(labelElId).textContent = doneCount + '/' + course.topics.length;
+  document.querySelectorAll('.site-nav button').forEach(b => b.classList.remove('active'));
+  if (name === 'home') document.getElementById('navHome').classList.add('active');
+  else {
+    document.querySelectorAll('.site-nav button').forEach(b => {
+      if (b.textContent.toLowerCase().includes(name === 'r' ? 'r programming' : name)) b.classList.add('active');
+    });
+  }
+
+  if (name === 'home') renderHome();
+  else renderCoursePage(name);
+
+  window.scrollTo(0, 0);
 }
 
-function updateTotals() {
-  let total = 0;
-  let done = 0;
-  Object.values(courses).forEach(course => {
-    const state = loadProgress(course.storageKey);
+/* ================== HOME RENDER ================== */
+
+function renderHome() {
+  let total = 0, done = 0;
+  Object.entries(courseData).forEach(([key, course]) => {
+    const state = loadJSON('progress_' + course.storagePrefix, {});
+    const courseDone = Object.values(state).filter(Boolean).length;
     total += course.topics.length;
-    done += Object.values(state).filter(Boolean).length;
+    done += courseDone;
+    const fillEl = document.getElementById('homeFill-' + (key === 'r' ? 'r' : 'oose'));
+    const labelEl = document.getElementById('homeLabel-' + (key === 'r' ? 'r' : 'oose'));
+    if (fillEl) fillEl.style.width = Math.round((courseDone / course.topics.length) * 100) + '%';
+    if (labelEl) labelEl.textContent = courseDone + '/' + course.topics.length;
   });
-  document.getElementById('totalTopics').textContent = total;
-  document.getElementById('totalDone').textContent = done;
+  document.getElementById('homeTotalTopics').textContent = total;
+  document.getElementById('homeTotalDone').textContent = done;
 }
 
-function resetProgress() {
-  Object.values(courses).forEach(course => localStorage.removeItem(course.storageKey));
-  renderCourse('oose', 'topics-oose', 'fill-oose', 'label-oose');
-  renderCourse('r', 'topics-r', 'fill-r', 'label-r');
-  updateTotals();
+/* ================== COURSE PAGE RENDER ================== */
+
+let activeTab = { oose: 'notes', r: 'notes' };
+
+function renderCoursePage(courseKey) {
+  const course = courseData[courseKey];
+  const tabsEl = document.getElementById('tabs-' + courseKey);
+
+  tabsEl.innerHTML = tabDefs.map(t =>
+    '<button class="' + (activeTab[courseKey] === t.key ? 'active' : '') + '" onclick="switchTab(\'' + courseKey + '\', \'' + t.key + '\')">' + t.label + '</button>'
+  ).join('');
+
+  renderNotes(courseKey);
+  renderQuiz(courseKey);
+  renderMaterials(courseKey);
+
+  tabDefs.forEach(t => {
+    document.getElementById('panel-' + courseKey + '-' + t.key).classList.toggle('active', activeTab[courseKey] === t.key);
+  });
 }
 
-renderCourse('oose', 'topics-oose', 'fill-oose', 'label-oose');
-renderCourse('r', 'topics-r', 'fill-r', 'label-r');
-updateTotals();
+function switchTab(courseKey, tabKey) {
+  activeTab[courseKey] = tabKey;
+  renderCoursePage(courseKey);
+}
 
-document.getElementById('todayLabel').textContent = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+/* ---------- Notes tab ---------- */
+
+let openTopics = { oose: {}, r: {} };
+
+function renderNotes(courseKey) {
+  const course = courseData[courseKey];
+  const state = loadJSON('progress_' + course.storagePrefix, {});
+  const panel = document.getElementById('panel-' + courseKey + '-notes');
+
+  panel.innerHTML = course.topics.map((topic, i) => {
+    const done = !!state[i];
+    const open = !!openTopics[courseKey][i];
+    return (
+      '<div class="topic-block">' +
+        '<button class="topic-header' + (done ? ' done' : '') + (open ? ' open' : '') + '" onclick="toggleTopicOpen(\'' + courseKey + '\', ' + i + ')">' +
+          '<span class="tick' + (done ? ' checked' : '') + '" onclick="event.stopPropagation(); toggleTopicDone(\'' + courseKey + '\', ' + i + ')">' + tickSVG() + '</span>' +
+          '<span class="t-title">' + topic.title + '</span>' +
+          '<span class="chevron">&#9656;</span>' +
+        '</button>' +
+        '<div class="topic-body' + (open ? ' open' : '') + '">' +
+          '<p>' + topic.body + '</p>' +
+          (topic.example ? '<div class="example-box">' + topic.example + '</div>' : '') +
+        '</div>' +
+      '</div>'
+    );
+  }).join('');
+}
+
+function toggleTopicOpen(courseKey, i) {
+  openTopics[courseKey][i] = !openTopics[courseKey][i];
+  renderNotes(courseKey);
+}
+
+function toggleTopicDone(courseKey, i) {
+  const course = courseData[courseKey];
+  const state = loadJSON('progress_' + course.storagePrefix, {});
+  state[i] = !state[i];
+  saveJSON('progress_' + course.storagePrefix, state);
+  renderNotes(courseKey);
+}
+
+/* ---------- Quiz tab ---------- */
+
+let quizState = {
+  oose: { current: 0, score: 0, answered: false },
+  r: { current: 0, score: 0, answered: false }
+};
+
+function renderQuiz(courseKey) {
+  const course = courseData[courseKey];
+  const qs = quizState[courseKey];
+  const panel = document.getElementById('panel-' + courseKey + '-quiz');
+
+  if (qs.current >= course.quiz.length) {
+    const pct = Math.round((qs.score / course.quiz.length) * 100);
+    let msg = "Solid grasp of the fundamentals.";
+    if (pct === 100) msg = "Perfect score, this material is clear to you.";
+    else if (pct < 60) msg = "Worth a re-read of the notes above.";
+    panel.innerHTML =
+      '<div class="q-card"><div class="q-score">' +
+      '<p style="font-size:14px;color:var(--ink-soft);margin:0">You scored</p>' +
+      '<p class="q-score-num">' + qs.score + ' / ' + course.quiz.length + '</p>' +
+      '<p style="font-size:14px;color:var(--ink-soft);margin:0 0 16px">' + msg + '</p>' +
+      '<button class="primary-btn" onclick="restartQuiz(\'' + courseKey + '\')">&#8635; Retake quiz</button>' +
+      '</div></div>';
+    return;
+  }
+
+  const item = course.quiz[qs.current];
+  panel.innerHTML =
+    '<div class="q-progress">Question ' + (qs.current + 1) + ' of ' + course.quiz.length + ' &middot; Score: ' + qs.score + '</div>' +
+    '<div class="q-card">' +
+      '<p class="q-text">' + item.q + '</p>' +
+      item.options.map((opt, i) =>
+        '<button class="q-opt" data-i="' + i + '" onclick="selectAnswer(\'' + courseKey + '\', ' + i + ')">' + opt + '</button>'
+      ).join('') +
+      '<div class="q-explain" id="explain-' + courseKey + '" style="display:none"></div>' +
+      '<div class="q-nav" id="qnav-' + courseKey + '"></div>' +
+    '</div>';
+}
+
+function selectAnswer(courseKey, i) {
+  const course = courseData[courseKey];
+  const qs = quizState[courseKey];
+  if (qs.answered) return;
+  qs.answered = true;
+  const item = course.quiz[qs.current];
+  const buttons = document.querySelectorAll('#panel-' + courseKey + '-quiz .q-opt');
+  buttons.forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === item.correct) b.classList.add('correct');
+    else if (idx === i && i !== item.correct) b.classList.add('wrong');
+  });
+  if (i === item.correct) qs.score++;
+
+  const explain = document.getElementById('explain-' + courseKey);
+  explain.style.display = 'block';
+  explain.textContent = item.explain;
+
+  const nav = document.getElementById('qnav-' + courseKey);
+  const isLast = qs.current === course.quiz.length - 1;
+  nav.innerHTML = '<button class="primary-btn" onclick="advanceQuiz(\'' + courseKey + '\')">' + (isLast ? 'See final score' : 'Next question') + ' &rarr;</button>';
+}
+
+function advanceQuiz(courseKey) {
+  quizState[courseKey].current++;
+  quizState[courseKey].answered = false;
+  renderQuiz(courseKey);
+}
+
+function restartQuiz(courseKey) {
+  quizState[courseKey] = { current: 0, score: 0, answered: false };
+  renderQuiz(courseKey);
+}
+
+/* ---------- Materials tab ---------- */
+
+function renderMaterials(courseKey) {
+  const course = courseData[courseKey];
+  const panel = document.getElementById('panel-' + courseKey + '-materials');
+  const notesKey = 'mynotes_' + course.storagePrefix;
+  const savedNotes = localStorage.getItem(notesKey) || '';
+
+  panel.innerHTML =
+    '<p class="section-label">Study resources</p>' +
+    '<ul class="resources">' +
+      course.resources.map(r => '<li><a href="' + r.url + '" target="_blank" rel="noopener">' + r.label + '</a></li>').join('') +
+      '<li><span class="res-note">+ add your own course slides, PDF, or textbook link by editing this file</span></li>' +
+    '</ul>' +
+    '<p class="section-label">My notes</p>' +
+    '<textarea class="notes-area" id="notesArea-' + courseKey + '" placeholder="Paste or type your own notes, links, or reminders here. Saved automatically in this browser.">' + escapeHTML(savedNotes) + '</textarea>' +
+    '<div class="save-row">' +
+      '<span class="save-status" id="saveStatus-' + courseKey + '">Saved</span>' +
+    '</div>';
+
+  const textarea = document.getElementById('notesArea-' + courseKey);
+  let saveTimeout;
+  textarea.addEventListener('input', () => {
+    document.getElementById('saveStatus-' + courseKey).textContent = 'Saving…';
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      localStorage.setItem(notesKey, textarea.value);
+      document.getElementById('saveStatus-' + courseKey).textContent = 'Saved';
+    }, 400);
+  });
+}
+
+function escapeHTML(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ================== INIT ================== */
+
+renderHome();
 </script>
 </body>
 </html>
