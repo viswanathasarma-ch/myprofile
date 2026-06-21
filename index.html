@@ -346,6 +346,80 @@
   footer.page-footer {
     text-align: center; font-size: 12px; color: var(--ink-faint); margin-top: 3.5rem;
   }
+
+  /* ---------- lab materials table ---------- */
+  .lab-intro {
+    font-size: 13.5px; color: var(--ink-soft); margin: 0 0 1.25rem; max-width: 600px;
+  }
+
+  .lab-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+  }
+
+  table.lab-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    min-width: 560px;
+  }
+
+  table.lab-table th, table.lab-table td {
+    border-bottom: 1px solid var(--rule);
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  table.lab-table th {
+    background: var(--paper-soft);
+    font-weight: 700;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  table.lab-table tr:last-child td { border-bottom: none; }
+
+  table.lab-table td.lab-num {
+    font-family: monospace;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  table.lab-table td.lab-title {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  table.lab-table td.lab-aim {
+    color: var(--ink-soft);
+  }
+
+  table.lab-table tr.lab-done td.lab-title {
+    color: var(--ink-faint);
+  }
+
+  td.lab-status { text-align: center; }
+
+  .lab-tick {
+    width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--rule);
+    display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .oose-theme .lab-tick.checked { background: var(--oose); border-color: var(--oose); }
+  .r-theme .lab-tick.checked { background: var(--r); border-color: var(--r); }
+  .lab-tick svg { width: 11px; height: 11px; opacity: 0; }
+  .lab-tick.checked svg { opacity: 1; }
+
+  .lab-progress-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; max-width: 360px;
+  }
+  .lab-progress-label {
+    font-size: 12px; font-family: monospace; color: var(--ink-soft); min-width: 44px; text-align: right;
+  }
 </style>
 </head>
 <body>
@@ -416,8 +490,8 @@
       <div class="tab-panel active" id="panel-oose-notes"></div>
       <div class="tab-panel" id="panel-oose-quiz"></div>
       <div class="tab-panel" id="panel-oose-materials"></div>
-      <div class="tab-panel" id="panel-oose-lab-materials"></div>    
-</div>
+      <div class="tab-panel" id="panel-oose-lab"></div>
+    </div>
 
     <!-- ============ R COURSE PAGE ============ -->
     <div class="view" id="view-r">
@@ -433,6 +507,7 @@
       <div class="tab-panel active" id="panel-r-notes"></div>
       <div class="tab-panel" id="panel-r-quiz"></div>
       <div class="tab-panel" id="panel-r-materials"></div>
+      <div class="tab-panel" id="panel-r-lab"></div>
     </div>
 
   </div>
@@ -514,6 +589,18 @@ const courseData = {
       { label: "GeeksforGeeks — object-oriented analysis & design", url: "https://www.geeksforgeeks.org/object-oriented-analysis-and-design/" },
       { label: "TutorialsPoint — UML tutorial", url: "https://www.tutorialspoint.com/uml/index.htm" },
       { label: "Refactoring Guru — design patterns catalog", url: "https://refactoring.guru/design-patterns" }
+    ],
+    labs: [
+      { title: "Use case diagram", aim: "Draw a use case diagram for a real-world system (e.g. ATM or library) identifying actors and use cases." },
+      { title: "Class diagram", aim: "Identify classes, attributes, and methods for a chosen system and draw the corresponding UML class diagram." },
+      { title: "Object diagram", aim: "Draw an object diagram showing a snapshot of specific object instances and their relationships at runtime." },
+      { title: "Sequence diagram", aim: "Model the sequence of messages exchanged between objects for one specific use case." },
+      { title: "Collaboration diagram", aim: "Show how objects interact and collaborate to carry out a particular behavior or task." },
+      { title: "Activity diagram", aim: "Model the workflow of a business process or use case as a flow of activities." },
+      { title: "State chart diagram", aim: "Model the different states an object can be in and the events that trigger transitions between them." },
+      { title: "Component diagram", aim: "Model the physical components of a system and the dependencies between them." },
+      { title: "Deployment diagram", aim: "Model the physical hardware nodes and how software components are deployed across them." },
+      { title: "Implementing a design pattern", aim: "Implement a simple creational or behavioral design pattern (e.g. Singleton or Observer) in code." }
     ]
   },
 
@@ -588,6 +675,23 @@ const courseData = {
       { label: "W3Schools — R tutorial", url: "https://www.w3schools.com/r/" },
       { label: "CRAN — official introduction to R", url: "https://cran.r-project.org/doc/manuals/r-release/R-intro.html" },
       { label: "R for Data Science (free online book)", url: "https://r4ds.hadley.nz/" }
+    ],
+    labs: [
+      { title: "R installation and basics", aim: "Install R and RStudio, and practice basic arithmetic, variable assignment, and print statements." },
+      { title: "Data types and type conversion", aim: "Explore numeric, character, logical, and integer types and practice converting between them." },
+      { title: "Vectors and vector operations", aim: "Create vectors, perform indexing, slicing, and element-wise arithmetic on them." },
+      { title: "Lists and matrices", aim: "Create and manipulate lists and matrices, including accessing and modifying specific elements." },
+      { title: "Factors and categorical data", aim: "Create factors from categorical data and explore levels, ordering, and frequency counts." },
+      { title: "Data frames: creation and indexing", aim: "Create a data frame manually, then practice row, column, and conditional indexing." },
+      { title: "Importing data from CSV", aim: "Import an external CSV file using read.csv() and inspect its structure with str() and summary()." },
+      { title: "Data cleaning basics", aim: "Handle missing values, duplicate rows, and inconsistent formatting in a sample dataset." },
+      { title: "Control structures", aim: "Write if/else conditions and for/while loops to solve a small computational problem." },
+      { title: "Writing custom functions", aim: "Define a custom function with parameters and a return value, then apply it to a dataset." },
+      { title: "String and date handling", aim: "Practice common string manipulation functions and basic date parsing and formatting." },
+      { title: "Descriptive statistics", aim: "Compute mean, median, standard deviation, and summary statistics for a real dataset." },
+      { title: "Plotting with base R", aim: "Create bar charts, histograms, and scatter plots using base R plotting functions." },
+      { title: "Plotting with ggplot2", aim: "Recreate the same charts from the previous lab using ggplot2's layered grammar of graphics." },
+      { title: "Basic hypothesis testing", aim: "Run a t-test or chi-square test on a sample dataset and interpret the resulting p-value." }
     ]
   }
 };
@@ -595,7 +699,8 @@ const courseData = {
 const tabDefs = [
   { key: 'notes', label: 'Notes' },
   { key: 'quiz', label: 'Quiz' },
-  { key: 'materials', label: 'Materials' }
+  { key: 'materials', label: 'Materials' },
+  { key: 'lab', label: 'Lab Materials' }
 ];
 
 /* ================== STORAGE HELPERS ================== */
@@ -670,6 +775,7 @@ function renderCoursePage(courseKey) {
   renderNotes(courseKey);
   renderQuiz(courseKey);
   renderMaterials(courseKey);
+  renderLabMaterials(courseKey);
 
   tabDefs.forEach(t => {
     document.getElementById('panel-' + courseKey + '-' + t.key).classList.toggle('active', activeTab[courseKey] === t.key);
@@ -834,19 +940,49 @@ function escapeHTML(str) {
   return div.innerHTML;
 }
 
+/* ---------- Lab Materials tab ---------- */
 
-<div id="labmaterials">
-    <h3>Lab Materials</h3>
+function renderLabMaterials(courseKey) {
+  const course = courseData[courseKey];
+  const panel = document.getElementById('panel-' + courseKey + '-lab');
+  const state = loadJSON('labprogress_' + course.storagePrefix, {});
+  const doneCount = Object.values(state).filter(Boolean).length;
+  const pct = Math.round((doneCount / course.labs.length) * 100);
 
-    <ul>
-        <li>Experiment 1: Use Case Diagram</li>
-        <li>Experiment 2: Class Diagram</li>
-        <li>Experiment 3: Sequence Diagram</li>
-        <li>Experiment 4: Activity Diagram</li>
-        <li>Experiment 5: Design Patterns</li>
-	<li>Experiment 6: design</li>
-    </ul>
-</div>
+  const rows = course.labs.map((lab, i) => {
+    const done = !!state[i];
+    return (
+      '<tr class="' + (done ? 'lab-done' : '') + '">' +
+        '<td class="lab-num">Exp ' + (i + 1) + '</td>' +
+        '<td class="lab-title">' + lab.title + '</td>' +
+        '<td class="lab-aim">' + lab.aim + '</td>' +
+        '<td class="lab-status"><span class="lab-tick' + (done ? ' checked' : '') + '" onclick="toggleLabDone(\'' + courseKey + '\', ' + i + ')">' + tickSVG() + '</span></td>' +
+      '</tr>'
+    );
+  }).join('');
+
+  panel.innerHTML =
+    '<p class="section-label">Lab experiments (' + course.labs.length + ')</p>' +
+    '<p class="lab-intro">Hands-on lab list for this course. Click the checkbox once you\'ve completed an experiment to track your progress.</p>' +
+    '<div class="lab-progress-row">' +
+      '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%; background:var(--' + (courseKey === 'r' ? 'r' : 'oose') + ')"></div></div>' +
+      '<span class="lab-progress-label">' + doneCount + '/' + course.labs.length + '</span>' +
+    '</div>' +
+    '<div class="lab-table-wrap">' +
+      '<table class="lab-table">' +
+        '<thead><tr><th>No.</th><th>Experiment</th><th>Aim</th><th>Done</th></tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table>' +
+    '</div>';
+}
+
+function toggleLabDone(courseKey, i) {
+  const course = courseData[courseKey];
+  const state = loadJSON('labprogress_' + course.storagePrefix, {});
+  state[i] = !state[i];
+  saveJSON('labprogress_' + course.storagePrefix, state);
+  renderLabMaterials(courseKey);
+}
 
 /* ================== INIT ================== */
 
